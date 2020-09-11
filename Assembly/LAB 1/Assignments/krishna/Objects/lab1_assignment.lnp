@@ -1,0 +1,8 @@
+--cpu=Cortex-M4.fp
+".\objects\lab1_assignment.o"
+".\objects\startup_msp432p401r_uvision.o"
+".\objects\system_msp432p401r.o"
+--strict --scatter ".\Objects\lab1_assignment.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\lab1_assignment.map" -o .\Objects\lab1_assignment.axf
