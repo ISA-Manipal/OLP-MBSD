@@ -1,0 +1,10 @@
+--cpu=Cortex-M4.fp.sp
+".\objects\core_cm3_constant.o"
+".\objects\msp432xx_constants.o"
+".\objects\msp432xx_tim_constants.o"
+".\objects\startup_msp432xx_md.o"
+".\objects\q2.o"
+--strict --scatter ".\Objects\Q2.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Q2.map" -o .\Objects\Q2.axf
