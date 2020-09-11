@@ -16,7 +16,7 @@ __main			PROC
 				
 				;The final value stored in R5 is the value that the shopkeeper has to pay back
 				;The value is 3C in Hex which is 62 in decimal
-				;Thus the money to be payed back is Rs.62 and not Rs.3536 as it was demanded by Suresh
+				;Thus the money to be payed back is Rs.62 and not Rs.3536
 			
 __stop			B __stop
 
