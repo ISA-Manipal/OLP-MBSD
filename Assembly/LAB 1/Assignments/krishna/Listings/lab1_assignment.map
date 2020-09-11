@@ -1,0 +1,219 @@
+Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+==============================================================================
+
+Section Cross References
+
+    startup_msp432p401r_uvision.o(STACK) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
+    startup_msp432p401r_uvision.o(HEAP) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
+    startup_msp432p401r_uvision.o(RESET) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
+    startup_msp432p401r_uvision.o(RESET) refers to startup_msp432p401r_uvision.o(STACK) for __initial_sp
+    startup_msp432p401r_uvision.o(RESET) refers to startup_msp432p401r_uvision.o(.text) for Reset_Handler
+    startup_msp432p401r_uvision.o(.text) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
+    startup_msp432p401r_uvision.o(.text) refers to system_msp432p401r.o(i.SystemInit) for SystemInit
+    startup_msp432p401r_uvision.o(.text) refers to lab1_assignment.o(main) for __main
+    startup_msp432p401r_uvision.o(.text) refers to startup_msp432p401r_uvision.o(HEAP) for Heap_Mem
+    startup_msp432p401r_uvision.o(.text) refers to startup_msp432p401r_uvision.o(STACK) for Stack_Mem
+    system_msp432p401r.o(i.SystemCoreClockUpdate) refers to system_msp432p401r.o(.data) for SystemCoreClock
+
+
+==============================================================================
+
+Removing Unused input sections from the image.
+
+    Removing lab1_assignment.o(__DEFINES_STM32L1xx_DUMMY), (0 bytes).
+    Removing lab1_assignment.o(__DEFINES_STM32L1xx_TIM_DUMMY), (0 bytes).
+    Removing lab1_assignment.o(allocations), (0 bytes).
+    Removing system_msp432p401r.o(.rev16_text), (4 bytes).
+    Removing system_msp432p401r.o(.revsh_text), (4 bytes).
+    Removing system_msp432p401r.o(.rrx_text), (6 bytes).
+    Removing system_msp432p401r.o(i.SystemCoreClockUpdate), (628 bytes).
+    Removing system_msp432p401r.o(.data), (4 bytes).
+
+8 unused section(s) (total 646 bytes) removed from the image.
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    RESET                                    0x00000000   Section      324  startup_msp432p401r_uvision.o(RESET)
+    ../clib/heapaux.c                        0x00000000   Number         0  heapauxi.o ABSOLUTE
+    RTE\Device\MSP432P401R\startup_msp432p401r_uvision.s 0x00000000   Number         0  startup_msp432p401r_uvision.o ABSOLUTE
+    RTE\Device\MSP432P401R\system_msp432p401r.c 0x00000000   Number         0  system_msp432p401r.o ABSOLUTE
+    RTE\\Device\\MSP432P401R\\system_msp432p401r.c 0x00000000   Number         0  system_msp432p401r.o ABSOLUTE
+    dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
+    lab1_assignment.s                        0x00000000   Number         0  lab1_assignment.o ABSOLUTE
+    .text                                    0x00000144   Section       60  startup_msp432p401r_uvision.o(.text)
+    $v0                                      0x00000144   Number         0  startup_msp432p401r_uvision.o(.text)
+    .text                                    0x00000180   Section        0  heapauxi.o(.text)
+    i.SystemInit                             0x00000188   Section        0  system_msp432p401r.o(i.SystemInit)
+    main                                     0x000001f4   Section       44  lab1_assignment.o(main)
+    $v0                                      0x000001f4   Number         0  lab1_assignment.o(main)
+    HEAP                                     0x20000000   Section        0  startup_msp432p401r_uvision.o(HEAP)
+    STACK                                    0x20000000   Section      512  startup_msp432p401r_uvision.o(STACK)
+    Heap_Mem                                 0x20000000   Data           0  startup_msp432p401r_uvision.o(HEAP)
+    Stack_Mem                                0x20000000   Data         512  startup_msp432p401r_uvision.o(STACK)
+    __initial_sp                             0x20000200   Data           0  startup_msp432p401r_uvision.o(STACK)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv4$E$P$D$K$B$S$7EM$VFPi3$EXTD16$VFPS$VFMA$PE$A:L22UL41UL21$X:L11$S22US41US21$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$ROPI$EBA8$STANDARDLIB$REQ8$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    __Vectors                                0x00000000   Data           4  startup_msp432p401r_uvision.o(RESET)
+    Reset_Handler                            0x00000145   Thumb Code     8  startup_msp432p401r_uvision.o(.text)
+    __Vectors_End                            0x00000144   Data           0  startup_msp432p401r_uvision.o(RESET)
+    __Vectors_Size                           0x00000144   Number         0  startup_msp432p401r_uvision.o ABSOLUTE
+    NMI_Handler                              0x0000014d   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    HardFault_Handler                        0x0000014f   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    MemManage_Handler                        0x00000151   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    BusFault_Handler                         0x00000153   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    UsageFault_Handler                       0x00000155   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    SVC_Handler                              0x00000157   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    DebugMon_Handler                         0x00000159   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    PendSV_Handler                           0x0000015b   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    SysTick_Handler                          0x0000015d   Thumb Code     2  startup_msp432p401r_uvision.o(.text)
+    ADC14_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    AES256_IRQHandler                        0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    COMP_E0_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    COMP_E1_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    CS_IRQHandler                            0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    DMA_ERR_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    DMA_INT0_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    DMA_INT1_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    DMA_INT2_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    DMA_INT3_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIA0_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIA1_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIA2_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIA3_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIB0_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIB1_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIB2_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    EUSCIB3_IRQHandler                       0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    FLCTL_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    FPU_IRQHandler                           0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PCM_IRQHandler                           0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT1_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT2_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT3_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT4_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT5_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PORT6_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    PSS_IRQHandler                           0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    RTC_C_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    T32_INT1_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    T32_INT2_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    T32_INTC_IRQHandler                      0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA0_0_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA0_N_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA1_0_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA1_N_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA2_0_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA2_N_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA3_0_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    TA3_N_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    WDT_A_IRQHandler                         0x0000015f   Thumb Code     0  startup_msp432p401r_uvision.o(.text)
+    __user_initial_stackheap                 0x00000161   Thumb Code    10  startup_msp432p401r_uvision.o(.text)
+    __use_two_region_memory                  0x00000181   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_escrow$2region                 0x00000183   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_expand$2region                 0x00000185   Thumb Code     2  heapauxi.o(.text)
+    SystemInit                               0x00000189   Thumb Code    86  system_msp432p401r.o(i.SystemInit)
+    __main                                   0x000001f5   Thumb Code    26  lab1_assignment.o(main)
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x000001f5
+
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00000220, Max: 0x00040000, ABSOLUTE)
+
+    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000220, Max: 0x00040000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x00000000   0x00000000   0x00000144   Data   RO           12    RESET               startup_msp432p401r_uvision.o
+    0x00000144   0x00000144   0x0000003c   Code   RO           13    .text               startup_msp432p401r_uvision.o
+    0x00000180   0x00000180   0x00000006   Code   RO           87    .text               c_w.l(heapauxi.o)
+    0x00000186   0x00000186   0x00000002   PAD
+    0x00000188   0x00000188   0x0000006c   Code   RO           21    i.SystemInit        system_msp432p401r.o
+    0x000001f4   0x000001f4   0x0000002c   Code   RO            3  * main                lab1_assignment.o
+
+
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00000220, Size: 0x00000200, Max: 0x00010000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000        -       0x00000000   Zero   RW           11    HEAP                startup_msp432p401r_uvision.o
+    0x20000000        -       0x00000200   Zero   RW           10    STACK               startup_msp432p401r_uvision.o
+
+
+
+  Load Region LR_IROM2 (Base: 0x00200000, Size: 0x00000000, Max: 0x00004000, ABSOLUTE)
+
+    Execution Region ER_IROM2 (Exec base: 0x00200000, Load base: 0x00200000, Size: 0x00000000, Max: 0x00004000, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+        44         18          0          0          0        432   lab1_assignment.o
+        60         22        324          0        512        952   startup_msp432p401r_uvision.o
+       108         22          0          0          0       2001   system_msp432p401r.o
+
+    ----------------------------------------------------------------------
+       212         62        324          0        512       3385   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Member Name
+
+         6          0          0          0          0        152   heapauxi.o
+
+    ----------------------------------------------------------------------
+         8          0          0          0          0        152   Library Totals
+         2          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Name
+
+         6          0          0          0          0        152   c_w.l
+
+    ----------------------------------------------------------------------
+         8          0          0          0          0        152   Library Totals
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+       220         62        324          0        512       3437   Grand Totals
+       220         62        324          0        512       3437   ELF Image Totals
+       220         62        324          0          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                  544 (   0.53kB)
+    Total RW  Size (RW Data + ZI Data)               512 (   0.50kB)
+    Total ROM Size (Code + RO Data + RW Data)        544 (   0.53kB)
+
+==============================================================================
+
