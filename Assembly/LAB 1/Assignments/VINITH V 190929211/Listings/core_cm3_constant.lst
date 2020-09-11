@@ -1,0 +1,4394 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;******************** (C) Yifeng ZHU *******************
+                       ***********************************************
+    2 00000000         ; @file    core_cm3_constant.s
+    3 00000000         ; @author  Yifeng Zhu @ UMaine
+    4 00000000         ; @version V1.0.0
+    5 00000000         ; @date    December-22-2012
+    6 00000000         ; @note    Modifed from core_cm3.h (C) 2010 STMicroelect
+                       ronics
+    7 00000000         ; @brief   Assembly version of Cortex M3 core
+    8 00000000         ; @note
+    9 00000000         ;          This code is for the book "Embedded Systems w
+                       ith ARM Cortex-M3 
+   10 00000000         ;          Microcontrollers in Assembly Language and C, 
+                       Yifeng Zhu, 
+   11 00000000         ;          ISBN-10: 0982692625.
+   12 00000000         ; @attension
+   13 00000000         ;          This code is provided for education purpose. 
+                       The author shall not be 
+   14 00000000         ;          held liable for any direct, indirect or conse
+                       quential damages, for any 
+   15 00000000         ;          reason whatever. More information can be foun
+                       d from book website: 
+   16 00000000         ;          http://www.eece.maine.edu/~zhu/book
+   17 00000000         ;*******************************************************
+                       ***********************************************
+   18 00000000         
+   19 00000000         ; ******************************************************
+                       ************************
+   20 00000000         ; *                 Register Abstraction
+   21 00000000         ; ******************************************************
+                       ***********************
+   22 00000000         
+   23 00000000         ; NVIC_ISER       EQU    0x000       ; Offset: 0x000  In
+                       terrupt Set Enable Register           
+   24 00000000         ; NVIC_ICER       EQU    0x080       ; Offset: 0x080  In
+                       terrupt Clear Enable Register         
+   25 00000000         ; NVIC_ISPR       EQU    0x100       ; Offset: 0x100  In
+                       terrupt Set Pending Register          
+   26 00000000         ; NVIC_ICPR       EQU    0x180       ; Offset: 0x180  In
+                       terrupt Clear Pending Register        
+   27 00000000         ; NVIC_IABR       EQU    0x200       ; Offset: 0x200  In
+                       terrupt Active bit Register           
+   28 00000000         ; NVIC_IP         EQU    0x300       ; Offset: 0x300  In
+                       terrupt Priority Register (8Bit wide) 
+   29 00000000         ; NVIC_STIR       EQU    0xE00       ; Offset: 0xE00  So
+                       ftware Trigger Interrupt Register     
+   30 00000000         
+   31 00000000         
+   32 00000000         ; SCB_CPUID       EQU    0x00        ; Offset: 0x00  CPU
+                        ID Base Register                                  
+   33 00000000         ; SCB_ICSR        EQU    0x04        ; Offset: 0x04  Int
+                       errupt Control State Register                      
+   34 00000000         ; SCB_VTOR        EQU    0x08        ; Offset: 0x08  Vec
+                       tor Table Offset Register                          
+   35 00000000         ; SCB_AIRCR       EQU    0x0C        ; Offset: 0x0C  App
+                       lication Interrupt / Reset Control Register        
+   36 00000000         ; SCB_SCR         EQU    0x10        ; Offset: 0x10  Sys
+                       tem Control Register                               
+   37 00000000         ; SCB_CCR         EQU    0x14        ; Offset: 0x14  Con
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                       figuration Control Register                        
+   38 00000000         ; SCB_SHP         EQU    0x18        ; Offset: 0x18  Sys
+                       tem Handlers Priority Registers (4-7, 8-11, 12-15) 
+   39 00000000         ; SCB_SHCSR       EQU    0x24        ; Offset: 0x24  Sys
+                       tem Handler Control and State Register             
+   40 00000000         ; SCB_CFSR        EQU    0x28        ; Offset: 0x28  Con
+                       figurable Fault Status Register                    
+   41 00000000         ; SCB_HFSR        EQU    0x2C        ; Offset: 0x2C  Har
+                       d Fault Status Register                            
+   42 00000000         ; SCB_DFSR        EQU    0x30        ; Offset: 0x30  Deb
+                       ug Fault Status Register                           
+   43 00000000         ; SCB_MMFAR       EQU    0x34        ; Offset: 0x34  Mem
+                        Manage Address Register                           
+   44 00000000         ; SCB_BFAR        EQU    0x38        ; Offset: 0x38  Bus
+                        Fault Address Register                            
+   45 00000000         ; SCB_AFSR        EQU    0x3C        ; Offset: 0x3C  Aux
+                       iliary Fault Status Register                       
+   46 00000000         ; SCB_PFR         EQU    0x40        ; Offset: 0x40  Pro
+                       cessor Feature Register                            
+   47 00000000         ; SCB_DFR         EQU    0x48        ; Offset: 0x48  Deb
+                       ug Feature Register                                
+   48 00000000         ; SCB_ADR         EQU    0x4C        ; Offset: 0x4C  Aux
+                       iliary Feature Register                            
+   49 00000000         ; SCB_MMFR        EQU    0x50        ; Offset: 0x50  Mem
+                       ory Model Feature Register                         
+   50 00000000         ; SCB_ISAR        EQU    0x60        ; Offset: 0x60  ISA
+                        Feature Register                                  
+   51 00000000         
+   52 00000000         ; SCB CPUID Register Definitions 
+   53 00000000 00000018 
+                       SCB_CPUID_IMPLEMENTER_Pos
+                               EQU              24          ; SCB CPUID: IMPLEM
+                                                            ENTER Position 
+   54 00000000 FF000000 
+                       SCB_CPUID_IMPLEMENTER_Msk
+                               EQU              (0xFF << SCB_CPUID_IMPLEMENTER_
+Pos) 
+                                                            ; SCB CPUID: IMPLEM
+                                                            ENTER Mask 
+   55 00000000         
+   56 00000000 00000014 
+                       SCB_CPUID_VARIANT_Pos
+                               EQU              20          ; SCB CPUID: VARIAN
+                                                            T Position 
+   57 00000000 00F00000 
+                       SCB_CPUID_VARIANT_Msk
+                               EQU              (0xF << SCB_CPUID_VARIANT_Pos) 
+                                                            ; SCB CPUID: VARIAN
+                                                            T Mask 
+   58 00000000         
+   59 00000000 00000004 
+                       SCB_CPUID_PARTNO_Pos
+                               EQU              4           ; SCB CPUID: PARTNO
+                                                             Position 
+   60 00000000 0000FFF0 
+                       SCB_CPUID_PARTNO_Msk
+                               EQU              (0xFFF << SCB_CPUID_PARTNO_Pos)
+ 
+                                                            ; SCB CPUID: PARTNO
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+                                                             Mask 
+   61 00000000         
+   62 00000000 00000000 
+                       SCB_CPUID_REVISION_Pos
+                               EQU              0           ; SCB CPUID: REVISI
+                                                            ON Position 
+   63 00000000 0000000F 
+                       SCB_CPUID_REVISION_Msk
+                               EQU              (0xF << SCB_CPUID_REVISION_Pos)
+ 
+                                                            ; SCB CPUID: REVISI
+                                                            ON Mask 
+   64 00000000         
+   65 00000000         ; SCB Interrupt Control State Register Definitions 
+   66 00000000 0000001F 
+                       SCB_ICSR_NMIPENDSET_Pos
+                               EQU              31          ; SCB ICSR: NMIPEND
+                                                            SET Position 
+   67 00000000 80000000 
+                       SCB_ICSR_NMIPENDSET_Msk
+                               EQU              (1 << SCB_ICSR_NMIPENDSET_Pos) 
+                                                            ; SCB ICSR: NMIPEND
+                                                            SET Mask 
+   68 00000000         
+   69 00000000 0000001C 
+                       SCB_ICSR_PENDSVSET_Pos
+                               EQU              28          ; SCB ICSR: PENDSVS
+                                                            ET Position 
+   70 00000000 10000000 
+                       SCB_ICSR_PENDSVSET_Msk
+                               EQU              (1 << SCB_ICSR_PENDSVSET_Pos) ;
+                                                             SCB ICSR: PENDSVSE
+                                                            T Mask 
+   71 00000000         
+   72 00000000 0000001B 
+                       SCB_ICSR_PENDSVCLR_Pos
+                               EQU              27          ; SCB ICSR: PENDSVC
+                                                            LR Position 
+   73 00000000 08000000 
+                       SCB_ICSR_PENDSVCLR_Msk
+                               EQU              (1 << SCB_ICSR_PENDSVCLR_Pos) ;
+                                                             SCB ICSR: PENDSVCL
+                                                            R Mask 
+   74 00000000         
+   75 00000000 0000001A 
+                       SCB_ICSR_PENDSTSET_Pos
+                               EQU              26          ; SCB ICSR: PENDSTS
+                                                            ET Position 
+   76 00000000 04000000 
+                       SCB_ICSR_PENDSTSET_Msk
+                               EQU              (1 << SCB_ICSR_PENDSTSET_Pos) ;
+                                                             SCB ICSR: PENDSTSE
+                                                            T Mask 
+   77 00000000         
+   78 00000000 00000019 
+                       SCB_ICSR_PENDSTCLR_Pos
+                               EQU              25          ; SCB ICSR: PENDSTC
+                                                            LR Position 
+   79 00000000 02000000 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+                       SCB_ICSR_PENDSTCLR_Msk
+                               EQU              (1 << SCB_ICSR_PENDSTCLR_Pos) ;
+                                                             SCB ICSR: PENDSTCL
+                                                            R Mask 
+   80 00000000         
+   81 00000000 00000017 
+                       SCB_ICSR_ISRPREEMPT_Pos
+                               EQU              23          ; SCB ICSR: ISRPREE
+                                                            MPT Position 
+   82 00000000 00800000 
+                       SCB_ICSR_ISRPREEMPT_Msk
+                               EQU              (1 << SCB_ICSR_ISRPREEMPT_Pos) 
+                                                            ; SCB ICSR: ISRPREE
+                                                            MPT Mask 
+   83 00000000         
+   84 00000000 00000016 
+                       SCB_ICSR_ISRPENDING_Pos
+                               EQU              22          ; SCB ICSR: ISRPEND
+                                                            ING Position 
+   85 00000000 00400000 
+                       SCB_ICSR_ISRPENDING_Msk
+                               EQU              (1 << SCB_ICSR_ISRPENDING_Pos) 
+                                                            ; SCB ICSR: ISRPEND
+                                                            ING Mask 
+   86 00000000         
+   87 00000000 0000000C 
+                       SCB_ICSR_VECTPENDING_Pos
+                               EQU              12          ; SCB ICSR: VECTPEN
+                                                            DING Position 
+   88 00000000 001FF000 
+                       SCB_ICSR_VECTPENDING_Msk
+                               EQU              (0x1FF << SCB_ICSR_VECTPENDING_
+Pos) 
+                                                            ; SCB ICSR: VECTPEN
+                                                            DING Mask 
+   89 00000000         
+   90 00000000 0000000B 
+                       SCB_ICSR_RETTOBASE_Pos
+                               EQU              11          ; SCB ICSR: RETTOBA
+                                                            SE Position 
+   91 00000000 00000800 
+                       SCB_ICSR_RETTOBASE_Msk
+                               EQU              (1 << SCB_ICSR_RETTOBASE_Pos) ;
+                                                             SCB ICSR: RETTOBAS
+                                                            E Mask 
+   92 00000000         
+   93 00000000 00000000 
+                       SCB_ICSR_VECTACTIVE_Pos
+                               EQU              0           ; SCB ICSR: VECTACT
+                                                            IVE Position 
+   94 00000000 000001FF 
+                       SCB_ICSR_VECTACTIVE_Msk
+                               EQU              (0x1FF << SCB_ICSR_VECTACTIVE_P
+os) 
+                                                            ; SCB ICSR: VECTACT
+                                                            IVE Mask 
+   95 00000000         
+   96 00000000         ; SCB Interrupt Control State Register Definitions 
+   97 00000000 0000001D 
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+                       SCB_VTOR_TBLBASE_Pos
+                               EQU              29          ; SCB VTOR: TBLBASE
+                                                             Position 
+   98 00000000 E0000000 
+                       SCB_VTOR_TBLBASE_Msk
+                               EQU              (0x1FF << SCB_VTOR_TBLBASE_Pos)
+ 
+                                                            ; SCB VTOR: TBLBASE
+                                                             Mask 
+   99 00000000         
+  100 00000000 00000007 
+                       SCB_VTOR_TBLOFF_Pos
+                               EQU              7           ; SCB VTOR: TBLOFF 
+                                                            Position 
+  101 00000000 1FFFFF80 
+                       SCB_VTOR_TBLOFF_Msk
+                               EQU              (0x3FFFFF << SCB_VTOR_TBLOFF_Po
+s) 
+                                                            ; SCB VTOR: TBLOFF 
+                                                            Mask 
+  102 00000000         
+  103 00000000         ; SCB Application Interrupt and Reset Control Register D
+                       efinitions 
+  104 00000000 00000010 
+                       SCB_AIRCR_VECTKEY_Pos
+                               EQU              16          ; SCB AIRCR: VECTKE
+                                                            Y Position 
+  105 00000000 FFFF0000 
+                       SCB_AIRCR_VECTKEY_Msk
+                               EQU              (0xFFFF << SCB_AIRCR_VECTKEY_Po
+s) 
+                                                            ; SCB AIRCR: VECTKE
+                                                            Y Mask 
+  106 00000000         
+  107 00000000 00000010 
+                       SCB_AIRCR_VECTKEYSTAT_Pos
+                               EQU              16          ; SCB AIRCR: VECTKE
+                                                            YSTAT Position 
+  108 00000000 FFFF0000 
+                       SCB_AIRCR_VECTKEYSTAT_Msk
+                               EQU              (0xFFFF << SCB_AIRCR_VECTKEYSTA
+T_Pos) 
+                                                            ; SCB AIRCR: VECTKE
+                                                            YSTAT Mask 
+  109 00000000         
+  110 00000000 0000000F 
+                       SCB_AIRCR_ENDIANESS_Pos
+                               EQU              15          ; SCB AIRCR: ENDIAN
+                                                            ESS Position 
+  111 00000000 00008000 
+                       SCB_AIRCR_ENDIANESS_Msk
+                               EQU              (1 << SCB_AIRCR_ENDIANESS_Pos) 
+                                                            ; SCB AIRCR: ENDIAN
+                                                            ESS Mask 
+  112 00000000         
+  113 00000000 00000008 
+                       SCB_AIRCR_PRIGROUP_Pos
+                               EQU              8           ; SCB AIRCR: PRIGRO
+                                                            UP Position 
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  114 00000000 00000700 
+                       SCB_AIRCR_PRIGROUP_Msk
+                               EQU              (7 << SCB_AIRCR_PRIGROUP_Pos) ;
+                                                             SCB AIRCR: PRIGROU
+                                                            P Mask 
+  115 00000000         
+  116 00000000 00000002 
+                       SCB_AIRCR_SYSRESETREQ_Pos
+                               EQU              2           ; SCB AIRCR: SYSRES
+                                                            ETREQ Position 
+  117 00000000 00000004 
+                       SCB_AIRCR_SYSRESETREQ_Msk
+                               EQU              (1 << SCB_AIRCR_SYSRESETREQ_Pos
+) 
+                                                            ; SCB AIRCR: SYSRES
+                                                            ETREQ Mask 
+  118 00000000         
+  119 00000000 00000001 
+                       SCB_AIRCR_VECTCLRACTIVE_Pos
+                               EQU              1           ; SCB AIRCR: VECTCL
+                                                            RACTIVE Position 
+  120 00000000 00000002 
+                       SCB_AIRCR_VECTCLRACTIVE_Msk
+                               EQU              (1 << SCB_AIRCR_VECTCLRACTIVE_P
+os) 
+                                                            ; SCB AIRCR: VECTCL
+                                                            RACTIVE Mask 
+  121 00000000         
+  122 00000000 00000000 
+                       SCB_AIRCR_VECTRESET_Pos
+                               EQU              0           ; SCB AIRCR: VECTRE
+                                                            SET Position 
+  123 00000000 00000001 
+                       SCB_AIRCR_VECTRESET_Msk
+                               EQU              (1 << SCB_AIRCR_VECTRESET_Pos) 
+                                                            ; SCB AIRCR: VECTRE
+                                                            SET Mask 
+  124 00000000         
+  125 00000000         ; SCB System Control Register Definitions 
+  126 00000000 00000004 
+                       SCB_SCR_SEVONPEND_Pos
+                               EQU              4           ; SCB SCR: SEVONPEN
+                                                            D Position 
+  127 00000000 00000010 
+                       SCB_SCR_SEVONPEND_Msk
+                               EQU              (1 << SCB_SCR_SEVONPEND_Pos) ; 
+                                                            SCB SCR: SEVONPEND 
+                                                            Mask 
+  128 00000000         
+  129 00000000 00000002 
+                       SCB_SCR_SLEEPDEEP_Pos
+                               EQU              2           ; SCB SCR: SLEEPDEE
+                                                            P Position 
+  130 00000000 00000004 
+                       SCB_SCR_SLEEPDEEP_Msk
+                               EQU              (1 << SCB_SCR_SLEEPDEEP_Pos) ; 
+                                                            SCB SCR: SLEEPDEEP 
+                                                            Mask 
+  131 00000000         
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  132 00000000 00000001 
+                       SCB_SCR_SLEEPONEXIT_Pos
+                               EQU              1           ; SCB SCR: SLEEPONE
+                                                            XIT Position 
+  133 00000000 00000002 
+                       SCB_SCR_SLEEPONEXIT_Msk
+                               EQU              (1 << SCB_SCR_SLEEPONEXIT_Pos) 
+                                                            ; SCB SCR: SLEEPONE
+                                                            XIT Mask 
+  134 00000000         
+  135 00000000         ; SCB Configuration Control Register Definitions 
+  136 00000000 00000009 
+                       SCB_CCR_STKALIGN_Pos
+                               EQU              9           ; SCB CCR: STKALIGN
+                                                             Position 
+  137 00000000 00000200 
+                       SCB_CCR_STKALIGN_Msk
+                               EQU              (1 << SCB_CCR_STKALIGN_Pos) ; S
+                                                            CB CCR: STKALIGN Ma
+                                                            sk 
+  138 00000000         
+  139 00000000 00000008 
+                       SCB_CCR_BFHFNMIGN_Pos
+                               EQU              8           ; SCB CCR: BFHFNMIG
+                                                            N Position 
+  140 00000000 00000100 
+                       SCB_CCR_BFHFNMIGN_Msk
+                               EQU              (1 << SCB_CCR_BFHFNMIGN_Pos) ; 
+                                                            SCB CCR: BFHFNMIGN 
+                                                            Mask 
+  141 00000000         
+  142 00000000 00000004 
+                       SCB_CCR_DIV_0_TRP_Pos
+                               EQU              4           ; SCB CCR: DIV_0_TR
+                                                            P Position 
+  143 00000000 00000010 
+                       SCB_CCR_DIV_0_TRP_Msk
+                               EQU              (1 << SCB_CCR_DIV_0_TRP_Pos) ; 
+                                                            SCB CCR: DIV_0_TRP 
+                                                            Mask 
+  144 00000000         
+  145 00000000 00000003 
+                       SCB_CCR_UNALIGN_TRP_Pos
+                               EQU              3           ; SCB CCR: UNALIGN_
+                                                            TRP Position 
+  146 00000000 00000008 
+                       SCB_CCR_UNALIGN_TRP_Msk
+                               EQU              (1 << SCB_CCR_UNALIGN_TRP_Pos) 
+                                                            ; SCB CCR: UNALIGN_
+                                                            TRP Mask 
+  147 00000000         
+  148 00000000 00000001 
+                       SCB_CCR_USERSETMPEND_Pos
+                               EQU              1           ; SCB CCR: USERSETM
+                                                            PEND Position 
+  149 00000000 00000002 
+                       SCB_CCR_USERSETMPEND_Msk
+                               EQU              (1 << SCB_CCR_USERSETMPEND_Pos)
+ 
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+                                                            ; SCB CCR: USERSETM
+                                                            PEND Mask 
+  150 00000000         
+  151 00000000 00000000 
+                       SCB_CCR_NONBASETHRDENA_Pos
+                               EQU              0           ; SCB CCR: NONBASET
+                                                            HRDENA Position 
+  152 00000000 00000001 
+                       SCB_CCR_NONBASETHRDENA_Msk
+                               EQU              (1 << SCB_CCR_NONBASETHRDENA_Po
+s) 
+                                                            ; SCB CCR: NONBASET
+                                                            HRDENA Mask 
+  153 00000000         
+  154 00000000         ; SCB System Handler Control and State Register Definiti
+                       ons 
+  155 00000000 00000012 
+                       SCB_SHCSR_USGFAULTENA_Pos
+                               EQU              18          ; SCB SHCSR: USGFAU
+                                                            LTENA Position 
+  156 00000000 00040000 
+                       SCB_SHCSR_USGFAULTENA_Msk
+                               EQU              (1 << SCB_SHCSR_USGFAULTENA_Pos
+) 
+                                                            ; SCB SHCSR: USGFAU
+                                                            LTENA Mask 
+  157 00000000         
+  158 00000000 00000011 
+                       SCB_SHCSR_BUSFAULTENA_Pos
+                               EQU              17          ; SCB SHCSR: BUSFAU
+                                                            LTENA Position 
+  159 00000000 00020000 
+                       SCB_SHCSR_BUSFAULTENA_Msk
+                               EQU              (1 << SCB_SHCSR_BUSFAULTENA_Pos
+) 
+                                                            ; SCB SHCSR: BUSFAU
+                                                            LTENA Mask 
+  160 00000000         
+  161 00000000 00000010 
+                       SCB_SHCSR_MEMFAULTENA_Pos
+                               EQU              16          ; SCB SHCSR: MEMFAU
+                                                            LTENA Position 
+  162 00000000 00010000 
+                       SCB_SHCSR_MEMFAULTENA_Msk
+                               EQU              (1 << SCB_SHCSR_MEMFAULTENA_Pos
+) 
+                                                            ; SCB SHCSR: MEMFAU
+                                                            LTENA Mask 
+  163 00000000         
+  164 00000000 0000000F 
+                       SCB_SHCSR_SVCALLPENDED_Pos
+                               EQU              15          ; SCB SHCSR: SVCALL
+                                                            PENDED Position 
+  165 00000000 00008000 
+                       SCB_SHCSR_SVCALLPENDED_Msk
+                               EQU              (1 << SCB_SHCSR_SVCALLPENDED_Po
+s) 
+                                                            ; SCB SHCSR: SVCALL
+                                                            PENDED Mask 
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+  166 00000000         
+  167 00000000 0000000E 
+                       SCB_SHCSR_BUSFAULTPENDED_Pos
+                               EQU              14          ; SCB SHCSR: BUSFAU
+                                                            LTPENDED Position 
+  168 00000000 00004000 
+                       SCB_SHCSR_BUSFAULTPENDED_Msk
+                               EQU              (1 << SCB_SHCSR_BUSFAULTPENDED_
+Pos) 
+                                                            ; SCB SHCSR: BUSFAU
+                                                            LTPENDED Mask 
+  169 00000000         
+  170 00000000 0000000D 
+                       SCB_SHCSR_MEMFAULTPENDED_Pos
+                               EQU              13          ; SCB SHCSR: MEMFAU
+                                                            LTPENDED Position 
+  171 00000000 00002000 
+                       SCB_SHCSR_MEMFAULTPENDED_Msk
+                               EQU              (1 << SCB_SHCSR_MEMFAULTPENDED_
+Pos) 
+                                                            ; SCB SHCSR: MEMFAU
+                                                            LTPENDED Mask 
+  172 00000000         
+  173 00000000 0000000C 
+                       SCB_SHCSR_USGFAULTPENDED_Pos
+                               EQU              12          ; SCB SHCSR: USGFAU
+                                                            LTPENDED Position 
+  174 00000000 00001000 
+                       SCB_SHCSR_USGFAULTPENDED_Msk
+                               EQU              (1 << SCB_SHCSR_USGFAULTPENDED_
+Pos) 
+                                                            ; SCB SHCSR: USGFAU
+                                                            LTPENDED Mask 
+  175 00000000         
+  176 00000000 0000000B 
+                       SCB_SHCSR_SYSTICKACT_Pos
+                               EQU              11          ; SCB SHCSR: SYSTIC
+                                                            KACT Position 
+  177 00000000 00000800 
+                       SCB_SHCSR_SYSTICKACT_Msk
+                               EQU              (1 << SCB_SHCSR_SYSTICKACT_Pos)
+ 
+                                                            ; SCB SHCSR: SYSTIC
+                                                            KACT Mask 
+  178 00000000         
+  179 00000000 0000000A 
+                       SCB_SHCSR_PENDSVACT_Pos
+                               EQU              10          ; SCB SHCSR: PENDSV
+                                                            ACT Position 
+  180 00000000 00000400 
+                       SCB_SHCSR_PENDSVACT_Msk
+                               EQU              (1 << SCB_SHCSR_PENDSVACT_Pos) 
+                                                            ; SCB SHCSR: PENDSV
+                                                            ACT Mask 
+  181 00000000         
+  182 00000000 00000008 
+                       SCB_SHCSR_MONITORACT_Pos
+                               EQU              8           ; SCB SHCSR: MONITO
+                                                            RACT Position 
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+  183 00000000 00000100 
+                       SCB_SHCSR_MONITORACT_Msk
+                               EQU              (1 << SCB_SHCSR_MONITORACT_Pos)
+ 
+                                                            ; SCB SHCSR: MONITO
+                                                            RACT Mask 
+  184 00000000         
+  185 00000000 00000007 
+                       SCB_SHCSR_SVCALLACT_Pos
+                               EQU              7           ; SCB SHCSR: SVCALL
+                                                            ACT Position 
+  186 00000000 00000080 
+                       SCB_SHCSR_SVCALLACT_Msk
+                               EQU              (1 << SCB_SHCSR_SVCALLACT_Pos) 
+                                                            ; SCB SHCSR: SVCALL
+                                                            ACT Mask 
+  187 00000000         
+  188 00000000 00000003 
+                       SCB_SHCSR_USGFAULTACT_Pos
+                               EQU              3           ; SCB SHCSR: USGFAU
+                                                            LTACT Position 
+  189 00000000 00000008 
+                       SCB_SHCSR_USGFAULTACT_Msk
+                               EQU              (1 << SCB_SHCSR_USGFAULTACT_Pos
+) 
+                                                            ; SCB SHCSR: USGFAU
+                                                            LTACT Mask 
+  190 00000000         
+  191 00000000 00000001 
+                       SCB_SHCSR_BUSFAULTACT_Pos
+                               EQU              1           ; SCB SHCSR: BUSFAU
+                                                            LTACT Position 
+  192 00000000 00000002 
+                       SCB_SHCSR_BUSFAULTACT_Msk
+                               EQU              (1 << SCB_SHCSR_BUSFAULTACT_Pos
+) 
+                                                            ; SCB SHCSR: BUSFAU
+                                                            LTACT Mask 
+  193 00000000         
+  194 00000000 00000000 
+                       SCB_SHCSR_MEMFAULTACT_Pos
+                               EQU              0           ; SCB SHCSR: MEMFAU
+                                                            LTACT Position 
+  195 00000000 00000001 
+                       SCB_SHCSR_MEMFAULTACT_Msk
+                               EQU              (1 << SCB_SHCSR_MEMFAULTACT_Pos
+) 
+                                                            ; SCB SHCSR: MEMFAU
+                                                            LTACT Mask 
+  196 00000000         
+  197 00000000         ; SCB Configurable Fat Status Registers Definitions 
+  198 00000000 00000010 
+                       SCB_CFSR_USGFAULTSR_Pos
+                               EQU              16          ; SCB CFSR: Usage F
+                                                            ault Status Registe
+                                                            r Position 
+  199 00000000 FFFF0000 
+                       SCB_CFSR_USGFAULTSR_Msk
+                               EQU              (0xFFFF << SCB_CFSR_USGFAULTSR_
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+Pos) 
+                                                            ; SCB CFSR: Usage F
+                                                            ault Status Registe
+                                                            r Mask 
+  200 00000000         
+  201 00000000 00000008 
+                       SCB_CFSR_BUSFAULTSR_Pos
+                               EQU              8           ; SCB CFSR: Bus Fau
+                                                            lt Status Register 
+                                                            Position 
+  202 00000000 0000FF00 
+                       SCB_CFSR_BUSFAULTSR_Msk
+                               EQU              (0xFF << SCB_CFSR_BUSFAULTSR_Po
+s) 
+                                                            ; SCB CFSR: Bus Fau
+                                                            lt Status Register 
+                                                            Mask 
+  203 00000000         
+  204 00000000 00000000 
+                       SCB_CFSR_MEMFAULTSR_Pos
+                               EQU              0           ; SCB CFSR: Memory 
+                                                            Manage Fault Status
+                                                             Register Position 
+                                                            
+  205 00000000 000000FF 
+                       SCB_CFSR_MEMFAULTSR_Msk
+                               EQU              (0xFF << SCB_CFSR_MEMFAULTSR_Po
+s) 
+                                                            ; SCB CFSR: Memory 
+                                                            Manage Fault Status
+                                                             Register Mask 
+  206 00000000         
+  207 00000000         ; SCB Hard Fault Status Registers Definitions 
+  208 00000000 0000001F 
+                       SCB_HFSR_DEBUGEVT_Pos
+                               EQU              31          ; SCB HFSR: DEBUGEV
+                                                            T Position 
+  209 00000000 80000000 
+                       SCB_HFSR_DEBUGEVT_Msk
+                               EQU              (1 << SCB_HFSR_DEBUGEVT_Pos) ; 
+                                                            SCB HFSR: DEBUGEVT 
+                                                            Mask 
+  210 00000000         
+  211 00000000 0000001E 
+                       SCB_HFSR_FORCED_Pos
+                               EQU              30          ; SCB HFSR: FORCED 
+                                                            Position 
+  212 00000000 40000000 
+                       SCB_HFSR_FORCED_Msk
+                               EQU              (1 << SCB_HFSR_FORCED_Pos) ; SC
+                                                            B HFSR: FORCED Mask
+                                                             
+  213 00000000         
+  214 00000000 00000001 
+                       SCB_HFSR_VECTTBL_Pos
+                               EQU              1           ; SCB HFSR: VECTTBL
+                                                             Position 
+  215 00000000 00000002 
+                       SCB_HFSR_VECTTBL_Msk
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+                               EQU              (1 << SCB_HFSR_VECTTBL_Pos) ; S
+                                                            CB HFSR: VECTTBL Ma
+                                                            sk 
+  216 00000000         
+  217 00000000         ; SCB Debug Fault Status Register Definitions 
+  218 00000000 00000004 
+                       SCB_DFSR_EXTERNAL_Pos
+                               EQU              4           ; SCB DFSR: EXTERNA
+                                                            L Position 
+  219 00000000 00000010 
+                       SCB_DFSR_EXTERNAL_Msk
+                               EQU              (1 << SCB_DFSR_EXTERNAL_Pos) ; 
+                                                            SCB DFSR: EXTERNAL 
+                                                            Mask 
+  220 00000000         
+  221 00000000 00000003 
+                       SCB_DFSR_VCATCH_Pos
+                               EQU              3           ; SCB DFSR: VCATCH 
+                                                            Position 
+  222 00000000 00000008 
+                       SCB_DFSR_VCATCH_Msk
+                               EQU              (1 << SCB_DFSR_VCATCH_Pos) ; SC
+                                                            B DFSR: VCATCH Mask
+                                                             
+  223 00000000         
+  224 00000000 00000002 
+                       SCB_DFSR_DWTTRAP_Pos
+                               EQU              2           ; SCB DFSR: DWTTRAP
+                                                             Position 
+  225 00000000 00000004 
+                       SCB_DFSR_DWTTRAP_Msk
+                               EQU              (1 << SCB_DFSR_DWTTRAP_Pos) ; S
+                                                            CB DFSR: DWTTRAP Ma
+                                                            sk 
+  226 00000000         
+  227 00000000 00000001 
+                       SCB_DFSR_BKPT_Pos
+                               EQU              1           ; SCB DFSR: BKPT Po
+                                                            sition 
+  228 00000000 00000002 
+                       SCB_DFSR_BKPT_Msk
+                               EQU              (1 << SCB_DFSR_BKPT_Pos) ; SCB 
+                                                            DFSR: BKPT Mask 
+  229 00000000         
+  230 00000000 00000000 
+                       SCB_DFSR_HALTED_Pos
+                               EQU              0           ; SCB DFSR: HALTED 
+                                                            Position 
+  231 00000000 00000001 
+                       SCB_DFSR_HALTED_Msk
+                               EQU              (1 << SCB_DFSR_HALTED_Pos) ; SC
+                                                            B DFSR: HALTED Mask
+                                                             
+  232 00000000         ;  end of group CMSIS_CM3_SCB 
+  233 00000000         
+  234 00000000         
+  235 00000000         ; addtogroup CMSIS_CM3_SysTick CMSIS CM3 SysTick
+  236 00000000         ; SysTick_CTRL    EQU 0x00            ; Offset: 0x00  Sy
+                       sTick Control and Status Register 
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+  237 00000000         ; SysTick_LOAD    EQU 0x04            ; Offset: 0x04  Sy
+                       sTick Reload Value Register       
+  238 00000000         ; SysTick_VAL        EQU 0x08            ; Offset: 0x08 
+                        SysTick Current Value Register      
+  239 00000000         ; SysTick_CALIB    EQU 0x0C            ; Offset: 0x0C  S
+                       ysTick Calibration Register        
+  240 00000000         
+  241 00000000         ;  SysTick Control / Status Register Definitions 
+  242 00000000 00000010 
+                       SysTick_CTRL_COUNTFLAG_Pos
+                               EQU              16          ; SysTick CTRL: COU
+                                                            NTFLAG Position 
+  243 00000000 00010000 
+                       SysTick_CTRL_COUNTFLAG_Msk
+                               EQU              (1 << SysTick_CTRL_COUNTFLAG_Po
+s) 
+                                                            ; SysTick CTRL: COU
+                                                            NTFLAG Mask 
+  244 00000000         
+  245 00000000 00000002 
+                       SysTick_CTRL_CLKSOURCE_Pos
+                               EQU              2           ; SysTick CTRL: CLK
+                                                            SOURCE Position 
+  246 00000000 00000004 
+                       SysTick_CTRL_CLKSOURCE_Msk
+                               EQU              (1 << SysTick_CTRL_CLKSOURCE_Po
+s) 
+                                                            ; SysTick CTRL: CLK
+                                                            SOURCE Mask 
+  247 00000000         
+  248 00000000 00000001 
+                       SysTick_CTRL_TICKINT_Pos
+                               EQU              1           ; SysTick CTRL: TIC
+                                                            KINT Position 
+  249 00000000 00000002 
+                       SysTick_CTRL_TICKINT_Msk
+                               EQU              (1 << SysTick_CTRL_TICKINT_Pos)
+ 
+                                                            ; SysTick CTRL: TIC
+                                                            KINT Mask 
+  250 00000000         
+  251 00000000 00000000 
+                       SysTick_CTRL_ENABLE_Pos
+                               EQU              0           ; SysTick CTRL: ENA
+                                                            BLE Position 
+  252 00000000 00000001 
+                       SysTick_CTRL_ENABLE_Msk
+                               EQU              (1 << SysTick_CTRL_ENABLE_Pos) 
+                                                            ; SysTick CTRL: ENA
+                                                            BLE Mask 
+  253 00000000         
+  254 00000000         ;  SysTick Reload Register Definitions 
+  255 00000000 00000000 
+                       SysTick_LOAD_RELOAD_Pos
+                               EQU              0           ; SysTick LOAD: REL
+                                                            OAD Position 
+  256 00000000 00FFFFFF 
+                       SysTick_LOAD_RELOAD_Msk
+                               EQU              (0xFFFFFF << SysTick_LOAD_RELOA
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+D_Pos) 
+                                                            ; SysTick LOAD: REL
+                                                            OAD Mask 
+  257 00000000         
+  258 00000000         ;  SysTick Current Register Definitions 
+  259 00000000 00000000 
+                       SysTick_VAL_CURRENT_Pos
+                               EQU              0           ; SysTick VAL: CURR
+                                                            ENT Position 
+  260 00000000 00FFFFFF 
+                       SysTick_VAL_CURRENT_Msk
+                               EQU              (0xFFFFFF << SysTick_VAL_CURREN
+T_Pos) 
+                                                            ; SysTick VAL: CURR
+                                                            ENT Mask 
+  261 00000000         
+  262 00000000         ;  SysTick Calibration Register Definitions 
+  263 00000000 0000001F 
+                       SysTick_CALIB_NOREF_Pos
+                               EQU              31          ; SysTick CALIB: NO
+                                                            REF Position 
+  264 00000000 80000000 
+                       SysTick_CALIB_NOREF_Msk
+                               EQU              (1 << SysTick_CALIB_NOREF_Pos) 
+                                                            ; SysTick CALIB: NO
+                                                            REF Mask 
+  265 00000000         
+  266 00000000 0000001E 
+                       SysTick_CALIB_SKEW_Pos
+                               EQU              30          ; SysTick CALIB: SK
+                                                            EW Position 
+  267 00000000 40000000 
+                       SysTick_CALIB_SKEW_Msk
+                               EQU              (1 << SysTick_CALIB_SKEW_Pos) ;
+                                                             SysTick CALIB: SKE
+                                                            W Mask 
+  268 00000000         
+  269 00000000 00000000 
+                       SysTick_CALIB_TENMS_Pos
+                               EQU              0           ; SysTick CALIB: TE
+                                                            NMS Position 
+  270 00000000 00FFFFFF 
+                       SysTick_CALIB_TENMS_Msk
+                               EQU              (0xFFFFFF << SysTick_VAL_CURREN
+T_Pos) 
+                                                            ; SysTick CALIB: TE
+                                                            NMS Mask 
+  271 00000000         ;  end of group CMSIS_CM3_SysTick 
+  272 00000000         
+  273 00000000         
+  274 00000000         ; addtogroup CMSIS_CM3_ITM CMSIS CM3 ITM
+  275 00000000         ;  memory mapped structure for Instrumentation Trace Mac
+                       rocell (ITM)
+  276 00000000         ;
+  277 00000000         ;  __O  union  
+  278 00000000         ;  {
+  279 00000000         ;    __O  uint8_t    u8;                   ; Offset:    
+                          ITM Stimulus Port 8-bit                   
+  280 00000000         ;    __O  uint16_t   u16;                  ; Offset:    
+
+
+
+ARM Macro Assembler    Page 15 
+
+
+                          ITM Stimulus Port 16-bit                  
+  281 00000000         ;    __O  uint32_t   u32;                  ; Offset:    
+                          ITM Stimulus Port 32-bit                  
+  282 00000000         ;  }  PORT [32];                           ; Offset: 0x0
+                       0  ITM Stimulus Port Registers               
+  283 00000000         ;       uint32_t RESERVED0[864];                        
+                                
+  284 00000000         ;  __IO uint32_t TER;                      ; Offset:    
+                          ITM Trace Enable Register                 
+  285 00000000         ;       uint32_t RESERVED1[15];                         
+                                
+  286 00000000         ;  __IO uint32_t TPR;                      ; Offset:    
+                          ITM Trace Privilege Register              
+  287 00000000         ;       uint32_t RESERVED2[15];                         
+                                
+  288 00000000         ;  __IO uint32_t TCR;                      ; Offset:    
+                          ITM Trace Control Register                
+  289 00000000         ;       uint32_t RESERVED3[29];                         
+                                
+  290 00000000         ;  __IO uint32_t IWR;                      ; Offset:    
+                          ITM Integration Write Register            
+  291 00000000         ;  __IO uint32_t IRR;                      ; Offset:    
+                          ITM Integration Read Register             
+  292 00000000         ;  __IO uint32_t IMCR;                     ; Offset:    
+                          ITM Integration Mode Control Register     
+  293 00000000         ;       uint32_t RESERVED4[43];                         
+                                
+  294 00000000         ;  __IO uint32_t LAR;                      ; Offset:    
+                          ITM Lock Access Register                  
+  295 00000000         ;  __IO uint32_t LSR;                      ; Offset:    
+                          ITM Lock Status Register                  
+  296 00000000         ;       uint32_t RESERVED5[6];                          
+                                
+  297 00000000         ;  __I  uint32_t PID4;                     ; Offset:    
+                          ITM Peripheral Identification Register #4 
+  298 00000000         ;  __I  uint32_t PID5;                     ; Offset:    
+                          ITM Peripheral Identification Register #5 
+  299 00000000         ;  __I  uint32_t PID6;                     ; Offset:    
+                          ITM Peripheral Identification Register #6 
+  300 00000000         ;  __I  uint32_t PID7;                     ; Offset:    
+                          ITM Peripheral Identification Register #7 
+  301 00000000         ;  __I  uint32_t PID0;                     ; Offset:    
+                          ITM Peripheral Identification Register #0 
+  302 00000000         ;  __I  uint32_t PID1;                     ; Offset:    
+                          ITM Peripheral Identification Register #1 
+  303 00000000         ;  __I  uint32_t PID2;                     ; Offset:    
+                          ITM Peripheral Identification Register #2 
+  304 00000000         ;  __I  uint32_t PID3;                     ; Offset:    
+                          ITM Peripheral Identification Register #3 
+  305 00000000         ;  __I  uint32_t CID0;                     ; Offset:    
+                          ITM Component  Identification Register #0 
+  306 00000000         ;  __I  uint32_t CID1;                     ; Offset:    
+                          ITM Component  Identification Register #1 
+  307 00000000         ;  __I  uint32_t CID2;                     ; Offset:    
+                          ITM Component  Identification Register #2 
+  308 00000000         ;  __I  uint32_t CID3;                     ; Offset:    
+                          ITM Component  Identification Register #3 
+  309 00000000         ; } ITM_Type;     
+  310 00000000         
+
+
+
+ARM Macro Assembler    Page 16 
+
+
+  311 00000000         
+  312 00000000         ;  ITM Trace Privilege Register Definitions 
+  313 00000000 00000000 
+                       ITM_TPR_PRIVMASK_Pos
+                               EQU              0           ; ITM TPR: PRIVMASK
+                                                             Position 
+  314 00000000 0000000F 
+                       ITM_TPR_PRIVMASK_Msk
+                               EQU              (0xF << ITM_TPR_PRIVMASK_Pos) ;
+                                                             ITM TPR: PRIVMASK 
+                                                            Mask 
+  315 00000000         
+  316 00000000         ;  ITM Trace Control Register Definitions 
+  317 00000000 00000017 
+                       ITM_TCR_BUSY_Pos
+                               EQU              23          ; ITM TCR: BUSY Pos
+                                                            ition 
+  318 00000000 00800000 
+                       ITM_TCR_BUSY_Msk
+                               EQU              (1 << ITM_TCR_BUSY_Pos) ; ITM T
+                                                            CR: BUSY Mask 
+  319 00000000         
+  320 00000000 00000010 
+                       ITM_TCR_ATBID_Pos
+                               EQU              16          ; ITM TCR: ATBID Po
+                                                            sition 
+  321 00000000 007F0000 
+                       ITM_TCR_ATBID_Msk
+                               EQU              (0x7F << ITM_TCR_ATBID_Pos) ; I
+                                                            TM TCR: ATBID Mask 
+                                                            
+  322 00000000         
+  323 00000000 00000008 
+                       ITM_TCR_TSPrescale_Pos
+                               EQU              8           ; ITM TCR: TSPresca
+                                                            le Position 
+  324 00000000 00000300 
+                       ITM_TCR_TSPrescale_Msk
+                               EQU              (3 << ITM_TCR_TSPrescale_Pos) ;
+                                                             ITM TCR: TSPrescal
+                                                            e Mask 
+  325 00000000         
+  326 00000000 00000004 
+                       ITM_TCR_SWOENA_Pos
+                               EQU              4           ; ITM TCR: SWOENA P
+                                                            osition 
+  327 00000000 00000010 
+                       ITM_TCR_SWOENA_Msk
+                               EQU              (1 << ITM_TCR_SWOENA_Pos) ; ITM
+                                                             TCR: SWOENA Mask 
+  328 00000000         
+  329 00000000 00000003 
+                       ITM_TCR_DWTENA_Pos
+                               EQU              3           ; ITM TCR: DWTENA P
+                                                            osition 
+  330 00000000 00000008 
+                       ITM_TCR_DWTENA_Msk
+                               EQU              (1 << ITM_TCR_DWTENA_Pos) ; ITM
+                                                             TCR: DWTENA Mask 
+
+
+
+ARM Macro Assembler    Page 17 
+
+
+  331 00000000         
+  332 00000000 00000002 
+                       ITM_TCR_SYNCENA_Pos
+                               EQU              2           ; ITM TCR: SYNCENA 
+                                                            Position 
+  333 00000000 00000004 
+                       ITM_TCR_SYNCENA_Msk
+                               EQU              (1 << ITM_TCR_SYNCENA_Pos) ; IT
+                                                            M TCR: SYNCENA Mask
+                                                             
+  334 00000000         
+  335 00000000 00000001 
+                       ITM_TCR_TSENA_Pos
+                               EQU              1           ; ITM TCR: TSENA Po
+                                                            sition 
+  336 00000000 00000002 
+                       ITM_TCR_TSENA_Msk
+                               EQU              (1 << ITM_TCR_TSENA_Pos) ; ITM 
+                                                            TCR: TSENA Mask 
+  337 00000000         
+  338 00000000 00000000 
+                       ITM_TCR_ITMENA_Pos
+                               EQU              0           ; ITM TCR: ITM Enab
+                                                            le bit Position 
+  339 00000000 00000001 
+                       ITM_TCR_ITMENA_Msk
+                               EQU              (1 << ITM_TCR_ITMENA_Pos) ; ITM
+                                                             TCR: ITM Enable bi
+                                                            t Mask 
+  340 00000000         
+  341 00000000         ;  ITM Integration Write Register Definitions 
+  342 00000000 00000000 
+                       ITM_IWR_ATVALIDM_Pos
+                               EQU              0           ; ITM IWR: ATVALIDM
+                                                             Position 
+  343 00000000 00000001 
+                       ITM_IWR_ATVALIDM_Msk
+                               EQU              (1 << ITM_IWR_ATVALIDM_Pos) ; I
+                                                            TM IWR: ATVALIDM Ma
+                                                            sk 
+  344 00000000         
+  345 00000000         ;  ITM Integration Read Register Definitions 
+  346 00000000 00000000 
+                       ITM_IRR_ATREADYM_Pos
+                               EQU              0           ; ITM IRR: ATREADYM
+                                                             Position 
+  347 00000000 00000001 
+                       ITM_IRR_ATREADYM_Msk
+                               EQU              (1 << ITM_IRR_ATREADYM_Pos) ; I
+                                                            TM IRR: ATREADYM Ma
+                                                            sk 
+  348 00000000         
+  349 00000000         ;  ITM Integration Mode Control Register Definitions 
+  350 00000000 00000000 
+                       ITM_IMCR_INTEGRATION_Pos
+                               EQU              0           ; ITM IMCR: INTEGRA
+                                                            TION Position 
+  351 00000000 00000001 
+                       ITM_IMCR_INTEGRATION_Msk
+
+
+
+ARM Macro Assembler    Page 18 
+
+
+                               EQU              (1 << ITM_IMCR_INTEGRATION_Pos)
+ 
+                                                            ; ITM IMCR: INTEGRA
+                                                            TION Mask 
+  352 00000000         
+  353 00000000         ;  ITM Lock Status Register Definitions 
+  354 00000000 00000002 
+                       ITM_LSR_ByteAcc_Pos
+                               EQU              2           ; ITM LSR: ByteAcc 
+                                                            Position 
+  355 00000000 00000004 
+                       ITM_LSR_ByteAcc_Msk
+                               EQU              (1 << ITM_LSR_ByteAcc_Pos) ; IT
+                                                            M LSR: ByteAcc Mask
+                                                             
+  356 00000000         
+  357 00000000 00000001 
+                       ITM_LSR_Access_Pos
+                               EQU              1           ; ITM LSR: Access P
+                                                            osition 
+  358 00000000 00000002 
+                       ITM_LSR_Access_Msk
+                               EQU              (1 << ITM_LSR_Access_Pos) ; ITM
+                                                             LSR: Access Mask 
+  359 00000000         
+  360 00000000 00000000 
+                       ITM_LSR_Present_Pos
+                               EQU              0           ; ITM LSR: Present 
+                                                            Position 
+  361 00000000 00000001 
+                       ITM_LSR_Present_Msk
+                               EQU              (1 << ITM_LSR_Present_Pos) ; IT
+                                                            M LSR: Present Mask
+                                                             
+  362 00000000         
+  363 00000000         
+  364 00000000         ; addtogroup CMSIS_CM3_InterruptType CMSIS CM3 Interrupt
+                        Type
+  365 00000000 00000004 
+                       InterruptType_ICTR
+                               EQU              0x04        ; Offset: 0x04  Int
+                                                            errupt Control Type
+                                                             Register 
+  366 00000000 00000008 
+                       InterruptType_ACTLR
+                               EQU              0x08        ; Offset: 0x08  Aux
+                                                            iliary Control Regi
+                                                            ster      
+  367 00000000         
+  368 00000000         
+  369 00000000         ;  Interrupt Controller Type Register Definitions 
+  370 00000000 00000000 
+                       InterruptType_ICTR_INTLINESNUM_Pos
+                               EQU              0           ; InterruptType ICT
+                                                            R: INTLINESNUM Posi
+                                                            tion 
+  371 00000000 0000001F 
+                       InterruptType_ICTR_INTLINESNUM_Msk
+                               EQU              (0x1F << InterruptType_ICTR_INT
+
+
+
+ARM Macro Assembler    Page 19 
+
+
+LINESNUM_Pos) 
+                                                            ; InterruptType ICT
+                                                            R: INTLINESNUM Mask
+                                                             
+  372 00000000         
+  373 00000000         ;  Auxiliary Control Register Definitions 
+  374 00000000 00000002 
+                       InterruptType_ACTLR_DISFOLD_Pos
+                               EQU              2           ; InterruptType ACT
+                                                            LR: DISFOLD Positio
+                                                            n 
+  375 00000000 00000004 
+                       InterruptType_ACTLR_DISFOLD_Msk
+                               EQU              (1 << InterruptType_ACTLR_DISFO
+LD_Pos) 
+                                                            ; InterruptType ACT
+                                                            LR: DISFOLD Mask 
+  376 00000000         
+  377 00000000 00000001 
+                       InterruptType_ACTLR_DISDEFWBUF_Pos
+                               EQU              1           ; InterruptType ACT
+                                                            LR: DISDEFWBUF Posi
+                                                            tion 
+  378 00000000 00000002 
+                       InterruptType_ACTLR_DISDEFWBUF_Msk
+                               EQU              (1 << InterruptType_ACTLR_DISDE
+FWBUF_Pos) 
+                                                            ; InterruptType ACT
+                                                            LR: DISDEFWBUF Mask
+                                                             
+  379 00000000         
+  380 00000000 00000000 
+                       InterruptType_ACTLR_DISMCYCINT_Pos
+                               EQU              0           ; InterruptType ACT
+                                                            LR: DISMCYCINT Posi
+                                                            tion 
+  381 00000000 00000001 
+                       InterruptType_ACTLR_DISMCYCINT_Msk
+                               EQU              (1 << InterruptType_ACTLR_DISMC
+YCINT_Pos) 
+                                                            ; InterruptType ACT
+                                                            LR: DISMCYCINT Mask
+                                                             
+  382 00000000         ;  end of group CMSIS_CM3_InterruptType 
+  383 00000000         
+  384 00000000         
+  385 00000000 00000000 
+                       MPUTYPE EQU              0x00        ; Offset: 0x00  MPU
+                                                             Type Register     
+                                                                               
+                                                                  
+  386 00000000 00000004 
+                       MPU_CTRL
+                               EQU              0x04        ; Offset: 0x04  MPU
+                                                             Control Register  
+                                                                               
+                                                                  
+  387 00000000 00000008 
+                       MPU_RNR EQU              0x08        ; Offset: 0x08  MPU
+
+
+
+ARM Macro Assembler    Page 20 
+
+
+                                                             Region RNRber Regi
+                                                            ster               
+                                                                  
+  388 00000000 0000000C 
+                       MPU_RBAR
+                               EQU              0x0C        ; Offset: 0x0C  MPU
+                                                             Region Base Addres
+                                                            s Register         
+                                                                  
+  389 00000000 00000010 
+                       MPU_RASR
+                               EQU              0x10        ; Offset: 0x10  MPU
+                                                             Region Attribute a
+                                                            nd Size Register   
+                                                                  
+  390 00000000 00000014 
+                       MPU_RBAR_A1
+                               EQU              0x14        ; Offset: 0x14  MPU
+                                                             Alias 1 Region Bas
+                                                            e Address Register 
+                                                                  
+  391 00000000 00000018 
+                       MPU_RASR_A1
+                               EQU              0x18        ; Offset: 0x18  MPU
+                                                             Alias 1 Region Att
+                                                            ribute and Size Reg
+                                                            ister 
+  392 00000000 0000001C 
+                       MPU_RBAR_A2
+                               EQU              0x1C        ; Offset: 0x1C  MPU
+                                                             Alias 2 Region Bas
+                                                            e Address Register 
+                                                                  
+  393 00000000 00000020 
+                       MPU_RASR_A2
+                               EQU              0x20        ; Offset: 0x20  MPU
+                                                             Alias 2 Region Att
+                                                            ribute and Size Reg
+                                                            ister 
+  394 00000000 00000024 
+                       MPU_RBAR_A3
+                               EQU              0x24        ; Offset: 0x24  MPU
+                                                             Alias 3 Region Bas
+                                                            e Address Register 
+                                                                  
+  395 00000000 00000028 
+                       MPU_RASR_A3
+                               EQU              0x28        ; Offset: 0x28  MPU
+                                                             Alias 3 Region Att
+                                                            ribute and Size Reg
+                                                            ister 
+  396 00000000         
+  397 00000000         ; MPU Type Register 
+  398 00000000 00000010 
+                       MPU_TYPE_IREGION_Pos
+                               EQU              16          ; MPU TYPE: IREGION
+                                                             Position 
+  399 00000000 00FF0000 
+                       MPU_TYPE_IREGION_Msk
+
+
+
+ARM Macro Assembler    Page 21 
+
+
+                               EQU              (0xFF << MPU_TYPE_IREGION_Pos) 
+                                                            ; MPU TYPE: IREGION
+                                                             Mask 
+  400 00000000         
+  401 00000000 00000008 
+                       MPU_TYPE_DREGION_Pos
+                               EQU              8           ; MPU TYPE: DREGION
+                                                             Position 
+  402 00000000 0000FF00 
+                       MPU_TYPE_DREGION_Msk
+                               EQU              (0xFF << MPU_TYPE_DREGION_Pos) 
+                                                            ; MPU TYPE: DREGION
+                                                             Mask 
+  403 00000000         
+  404 00000000 00000000 
+                       MPU_TYPE_SEPARATE_Pos
+                               EQU              0           ; MPU TYPE: SEPARAT
+                                                            E Position 
+  405 00000000 00000001 
+                       MPU_TYPE_SEPARATE_Msk
+                               EQU              (1 << MPU_TYPE_SEPARATE_Pos) ; 
+                                                            MPU TYPE: SEPARATE 
+                                                            Mask 
+  406 00000000         
+  407 00000000         ; MPU Control Register 
+  408 00000000 00000002 
+                       MPU_CTRL_PRIVDEFENA_Pos
+                               EQU              2           ; MPU CTRL: PRIVDEF
+                                                            ENA Position 
+  409 00000000 00000004 
+                       MPU_CTRL_PRIVDEFENA_Msk
+                               EQU              (1 << MPU_CTRL_PRIVDEFENA_Pos) 
+                                                            ; MPU CTRL: PRIVDEF
+                                                            ENA Mask 
+  410 00000000         
+  411 00000000 00000001 
+                       MPU_CTRL_HFNMIENA_Pos
+                               EQU              1           ; MPU CTRL: HFNMIEN
+                                                            A Position 
+  412 00000000 00000002 
+                       MPU_CTRL_HFNMIENA_Msk
+                               EQU              (1 << MPU_CTRL_HFNMIENA_Pos) ; 
+                                                            MPU CTRL: HFNMIENA 
+                                                            Mask 
+  413 00000000         
+  414 00000000 00000000 
+                       MPU_CTRL_ENABLE_Pos
+                               EQU              0           ; MPU CTRL: ENABLE 
+                                                            Position 
+  415 00000000 00000001 
+                       MPU_CTRL_ENABLE_Msk
+                               EQU              (1 << MPU_CTRL_ENABLE_Pos) ; MP
+                                                            U CTRL: ENABLE Mask
+                                                             
+  416 00000000         
+  417 00000000         ; MPU Region Number Register 
+  418 00000000 00000000 
+                       MPU_RNR_REGION_Pos
+                               EQU              0           ; MPU RNR: REGION P
+
+
+
+ARM Macro Assembler    Page 22 
+
+
+                                                            osition 
+  419 00000000 000000FF 
+                       MPU_RNR_REGION_Msk
+                               EQU              (0xFF << MPU_RNR_REGION_Pos) ; 
+                                                            MPU RNR: REGION Mas
+                                                            k 
+  420 00000000         
+  421 00000000         ; MPU Region Base Address Register 
+  422 00000000 00000005 
+                       MPU_RBAR_ADDR_Pos
+                               EQU              5           ; MPU RBAR: ADDR Po
+                                                            sition 
+  423 00000000 FFFFFFE0 
+                       MPU_RBAR_ADDR_Msk
+                               EQU              (0x7FFFFFF << MPU_RBAR_ADDR_Pos
+) 
+                                                            ; MPU RBAR: ADDR Ma
+                                                            sk 
+  424 00000000         
+  425 00000000 00000004 
+                       MPU_RBAR_VALID_Pos
+                               EQU              4           ; MPU RBAR: VALID P
+                                                            osition 
+  426 00000000 00000010 
+                       MPU_RBAR_VALID_Msk
+                               EQU              (1 << MPU_RBAR_VALID_Pos) ; MPU
+                                                             RBAR: VALID Mask 
+  427 00000000         
+  428 00000000 00000000 
+                       MPU_RBAR_REGION_Pos
+                               EQU              0           ; MPU RBAR: REGION 
+                                                            Position 
+  429 00000000 0000000F 
+                       MPU_RBAR_REGION_Msk
+                               EQU              (0xF << MPU_RBAR_REGION_Pos) ; 
+                                                            MPU RBAR: REGION Ma
+                                                            sk 
+  430 00000000         
+  431 00000000         ; MPU Region Attribute and Size Register 
+  432 00000000 0000001C 
+                       MPU_RASR_XN_Pos
+                               EQU              28          ; MPU RASR: XN Posi
+                                                            tion 
+  433 00000000 10000000 
+                       MPU_RASR_XN_Msk
+                               EQU              (1 << MPU_RASR_XN_Pos) ; MPU RA
+                                                            SR: XN Mask 
+  434 00000000         
+  435 00000000 00000018 
+                       MPU_RASR_AP_Pos
+                               EQU              24          ; MPU RASR: AP Posi
+                                                            tion 
+  436 00000000 07000000 
+                       MPU_RASR_AP_Msk
+                               EQU              (7 << MPU_RASR_AP_Pos) ; MPU RA
+                                                            SR: AP Mask 
+  437 00000000         
+  438 00000000 00000013 
+                       MPU_RASR_TEX_Pos
+
+
+
+ARM Macro Assembler    Page 23 
+
+
+                               EQU              19          ; MPU RASR: TEX Pos
+                                                            ition 
+  439 00000000 00380000 
+                       MPU_RASR_TEX_Msk
+                               EQU              (7 << MPU_RASR_TEX_Pos) ; MPU R
+                                                            ASR: TEX Mask 
+  440 00000000         
+  441 00000000 00000012 
+                       MPU_RASR_S_Pos
+                               EQU              18          ; MPU RASR: Shareab
+                                                            le bit Position 
+  442 00000000 00040000 
+                       MPU_RASR_S_Msk
+                               EQU              (1 << MPU_RASR_S_Pos) ; MPU RAS
+                                                            R: Shareable bit Ma
+                                                            sk 
+  443 00000000         
+  444 00000000 00000011 
+                       MPU_RASR_C_Pos
+                               EQU              17          ; MPU RASR: Cacheab
+                                                            le bit Position 
+  445 00000000 00020000 
+                       MPU_RASR_C_Msk
+                               EQU              (1 << MPU_RASR_C_Pos) ; MPU RAS
+                                                            R: Cacheable bit Ma
+                                                            sk 
+  446 00000000         
+  447 00000000 00000010 
+                       MPU_RASR_B_Pos
+                               EQU              16          ; MPU RASR: Buffera
+                                                            ble bit Position 
+  448 00000000 00010000 
+                       MPU_RASR_B_Msk
+                               EQU              (1 << MPU_RASR_B_Pos) ; MPU RAS
+                                                            R: Bufferable bit M
+                                                            ask 
+  449 00000000         
+  450 00000000 00000008 
+                       MPU_RASR_SRD_Pos
+                               EQU              8           ; MPU RASR: Sub-Reg
+                                                            ion Disable Positio
+                                                            n 
+  451 00000000 0000FF00 
+                       MPU_RASR_SRD_Msk
+                               EQU              (0xFF << MPU_RASR_SRD_Pos) ; MP
+                                                            U RASR: Sub-Region 
+                                                            Disable Mask 
+  452 00000000         
+  453 00000000 00000001 
+                       MPU_RASR_SIZE_Pos
+                               EQU              1           ; MPU RASR: Region 
+                                                            Size Field Position
+                                                             
+  454 00000000 0000003E 
+                       MPU_RASR_SIZE_Msk
+                               EQU              (0x1F << MPU_RASR_SIZE_Pos) ; M
+                                                            PU RASR: Region Siz
+                                                            e Field Mask 
+  455 00000000         
+
+
+
+ARM Macro Assembler    Page 24 
+
+
+  456 00000000 00000000 
+                       MPU_RASR_ENA_Pos
+                               EQU              0           ; MPU RASR: Region 
+                                                            enable bit Position
+                                                             
+  457 00000000 0000001F 
+                       MPU_RASR_ENA_Msk
+                               EQU              (0x1F << MPU_RASR_ENA_Pos) ; MP
+                                                            U RASR: Region enab
+                                                            le bit Disable Mask
+                                                             
+  458 00000000         
+  459 00000000         
+  460 00000000         ; addtogroup CMSIS_CM3_CoreDebug CMSIS CM3 Core Debug
+  461 00000000 00000000 
+                       CoreDebug_DHCSR
+                               EQU              0x00        ; Offset: 0x00  Deb
+                                                            ug Halting Control 
+                                                            and Status Register
+                                                                
+  462 00000000 00000004 
+                       CoreDebug_DCRSR
+                               EQU              0x04        ; Offset: 0x04  Deb
+                                                            ug Core Register Se
+                                                            lector Register    
+                                                                
+  463 00000000 00000008 
+                       CoreDebug_DCRDR
+                               EQU              0x08        ; Offset: 0x08  Deb
+                                                            ug Core Register Da
+                                                            ta Register        
+                                                                
+  464 00000000 0000000C 
+                       CoreDebug_DEMCR
+                               EQU              0x0C        ; Offset: 0x0C  Deb
+                                                            ug Exception and Mo
+                                                            nitor Control Regis
+                                                            ter 
+  465 00000000         
+  466 00000000         ;  Debug Halting Control and Status Register 
+  467 00000000 00000010 
+                       CoreDebug_DHCSR_DBGKEY_Pos
+                               EQU              16          ; CoreDebug DHCSR: 
+                                                            DBGKEY Position 
+  468 00000000 FFFF0000 
+                       CoreDebug_DHCSR_DBGKEY_Msk
+                               EQU              (0xFFFF << CoreDebug_DHCSR_DBGK
+EY_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            DBGKEY Mask 
+  469 00000000         
+  470 00000000 00000019 
+                       CoreDebug_DHCSR_S_RESET_ST_Pos
+                               EQU              25          ; CoreDebug DHCSR: 
+                                                            S_RESET_ST Position
+                                                             
+  471 00000000 02000000 
+                       CoreDebug_DHCSR_S_RESET_ST_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_RESET_S
+
+
+
+ARM Macro Assembler    Page 25 
+
+
+T_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_RESET_ST Mask 
+  472 00000000         
+  473 00000000 00000018 
+                       CoreDebug_DHCSR_S_RETIRE_ST_Pos
+                               EQU              24          ; CoreDebug DHCSR: 
+                                                            S_RETIRE_ST Positio
+                                                            n 
+  474 00000000 01000000 
+                       CoreDebug_DHCSR_S_RETIRE_ST_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_RETIRE_
+ST_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_RETIRE_ST Mask 
+  475 00000000         
+  476 00000000 00000013 
+                       CoreDebug_DHCSR_S_LOCKUP_Pos
+                               EQU              19          ; CoreDebug DHCSR: 
+                                                            S_LOCKUP Position 
+  477 00000000 00080000 
+                       CoreDebug_DHCSR_S_LOCKUP_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_LOCKUP_
+Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_LOCKUP Mask 
+  478 00000000         
+  479 00000000 00000012 
+                       CoreDebug_DHCSR_S_SLEEP_Pos
+                               EQU              18          ; CoreDebug DHCSR: 
+                                                            S_SLEEP Position 
+  480 00000000 00040000 
+                       CoreDebug_DHCSR_S_SLEEP_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_SLEEP_P
+os) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_SLEEP Mask 
+  481 00000000         
+  482 00000000 00000011 
+                       CoreDebug_DHCSR_S_HALT_Pos
+                               EQU              17          ; CoreDebug DHCSR: 
+                                                            S_HALT Position 
+  483 00000000 00020000 
+                       CoreDebug_DHCSR_S_HALT_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_HALT_Po
+s) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_HALT Mask 
+  484 00000000         
+  485 00000000 00000010 
+                       CoreDebug_DHCSR_S_REGRDY_Pos
+                               EQU              16          ; CoreDebug DHCSR: 
+                                                            S_REGRDY Position 
+  486 00000000 00010000 
+                       CoreDebug_DHCSR_S_REGRDY_Msk
+                               EQU              (1 << CoreDebug_DHCSR_S_REGRDY_
+Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            S_REGRDY Mask 
+
+
+
+ARM Macro Assembler    Page 26 
+
+
+  487 00000000         
+  488 00000000 00000005 
+                       CoreDebug_DHCSR_C_SNAPSTALL_Pos
+                               EQU              5           ; CoreDebug DHCSR: 
+                                                            C_SNAPSTALL Positio
+                                                            n 
+  489 00000000 00000020 
+                       CoreDebug_DHCSR_C_SNAPSTALL_Msk
+                               EQU              (1 << CoreDebug_DHCSR_C_SNAPSTA
+LL_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            C_SNAPSTALL Mask 
+  490 00000000         
+  491 00000000 00000003 
+                       CoreDebug_DHCSR_C_MASKINTS_Pos
+                               EQU              3           ; CoreDebug DHCSR: 
+                                                            C_MASKINTS Position
+                                                             
+  492 00000000 00000008 
+                       CoreDebug_DHCSR_C_MASKINTS_Msk
+                               EQU              (1 << CoreDebug_DHCSR_C_MASKINT
+S_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            C_MASKINTS Mask 
+  493 00000000         
+  494 00000000 00000002 
+                       CoreDebug_DHCSR_C_STEP_Pos
+                               EQU              2           ; CoreDebug DHCSR: 
+                                                            C_STEP Position 
+  495 00000000 00000004 
+                       CoreDebug_DHCSR_C_STEP_Msk
+                               EQU              (1 << CoreDebug_DHCSR_C_STEP_Po
+s) 
+                                                            ; CoreDebug DHCSR: 
+                                                            C_STEP Mask 
+  496 00000000         
+  497 00000000 00000001 
+                       CoreDebug_DHCSR_C_HALT_Pos
+                               EQU              1           ; CoreDebug DHCSR: 
+                                                            C_HALT Position 
+  498 00000000 00000002 
+                       CoreDebug_DHCSR_C_HALT_Msk
+                               EQU              (1 << CoreDebug_DHCSR_C_HALT_Po
+s) 
+                                                            ; CoreDebug DHCSR: 
+                                                            C_HALT Mask 
+  499 00000000         
+  500 00000000 00000000 
+                       CoreDebug_DHCSR_C_DEBUGEN_Pos
+                               EQU              0           ; CoreDebug DHCSR: 
+                                                            C_DEBUGEN Position 
+                                                            
+  501 00000000 00000001 
+                       CoreDebug_DHCSR_C_DEBUGEN_Msk
+                               EQU              (1 << CoreDebug_DHCSR_C_DEBUGEN
+_Pos) 
+                                                            ; CoreDebug DHCSR: 
+                                                            C_DEBUGEN Mask 
+  502 00000000         
+
+
+
+ARM Macro Assembler    Page 27 
+
+
+  503 00000000         ;  Debug Core Register Selector Register 
+  504 00000000 00000010 
+                       CoreDebug_DCRSR_REGWnR_Pos
+                               EQU              16          ; CoreDebug DCRSR: 
+                                                            REGWnR Position 
+  505 00000000 00010000 
+                       CoreDebug_DCRSR_REGWnR_Msk
+                               EQU              (1 << CoreDebug_DCRSR_REGWnR_Po
+s) 
+                                                            ; CoreDebug DCRSR: 
+                                                            REGWnR Mask 
+  506 00000000         
+  507 00000000 00000000 
+                       CoreDebug_DCRSR_REGSEL_Pos
+                               EQU              0           ; CoreDebug DCRSR: 
+                                                            REGSEL Position 
+  508 00000000 0000001F 
+                       CoreDebug_DCRSR_REGSEL_Msk
+                               EQU              (0x1F << CoreDebug_DCRSR_REGSEL
+_Pos) 
+                                                            ; CoreDebug DCRSR: 
+                                                            REGSEL Mask 
+  509 00000000         
+  510 00000000         ;  Debug Exception and Monitor Control Register 
+  511 00000000 00000018 
+                       CoreDebug_DEMCR_TRCENA_Pos
+                               EQU              24          ; CoreDebug DEMCR: 
+                                                            TRCENA Position 
+  512 00000000 01000000 
+                       CoreDebug_DEMCR_TRCENA_Msk
+                               EQU              (1 << CoreDebug_DEMCR_TRCENA_Po
+s) 
+                                                            ; CoreDebug DEMCR: 
+                                                            TRCENA Mask 
+  513 00000000         
+  514 00000000 00000013 
+                       CoreDebug_DEMCR_MON_REQ_Pos
+                               EQU              19          ; CoreDebug DEMCR: 
+                                                            MON_REQ Position 
+  515 00000000 00080000 
+                       CoreDebug_DEMCR_MON_REQ_Msk
+                               EQU              (1 << CoreDebug_DEMCR_MON_REQ_P
+os) 
+                                                            ; CoreDebug DEMCR: 
+                                                            MON_REQ Mask 
+  516 00000000         
+  517 00000000 00000012 
+                       CoreDebug_DEMCR_MON_STEP_Pos
+                               EQU              18          ; CoreDebug DEMCR: 
+                                                            MON_STEP Position 
+  518 00000000 00040000 
+                       CoreDebug_DEMCR_MON_STEP_Msk
+                               EQU              (1 << CoreDebug_DEMCR_MON_STEP_
+Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            MON_STEP Mask 
+  519 00000000         
+  520 00000000 00000011 
+                       CoreDebug_DEMCR_MON_PEND_Pos
+
+
+
+ARM Macro Assembler    Page 28 
+
+
+                               EQU              17          ; CoreDebug DEMCR: 
+                                                            MON_PEND Position 
+  521 00000000 00020000 
+                       CoreDebug_DEMCR_MON_PEND_Msk
+                               EQU              (1 << CoreDebug_DEMCR_MON_PEND_
+Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            MON_PEND Mask 
+  522 00000000         
+  523 00000000 00000010 
+                       CoreDebug_DEMCR_MON_EN_Pos
+                               EQU              16          ; CoreDebug DEMCR: 
+                                                            MON_EN Position 
+  524 00000000 00010000 
+                       CoreDebug_DEMCR_MON_EN_Msk
+                               EQU              (1 << CoreDebug_DEMCR_MON_EN_Po
+s) 
+                                                            ; CoreDebug DEMCR: 
+                                                            MON_EN Mask 
+  525 00000000         
+  526 00000000 0000000A 
+                       CoreDebug_DEMCR_VC_HARDERR_Pos
+                               EQU              10          ; CoreDebug DEMCR: 
+                                                            VC_HARDERR Position
+                                                             
+  527 00000000 00000400 
+                       CoreDebug_DEMCR_VC_HARDERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_HARDER
+R_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_HARDERR Mask 
+  528 00000000         
+  529 00000000 00000009 
+                       CoreDebug_DEMCR_VC_INTERR_Pos
+                               EQU              9           ; CoreDebug DEMCR: 
+                                                            VC_INTERR Position 
+                                                            
+  530 00000000 00000200 
+                       CoreDebug_DEMCR_VC_INTERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_INTERR
+_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_INTERR Mask 
+  531 00000000         
+  532 00000000 00000008 
+                       CoreDebug_DEMCR_VC_BUSERR_Pos
+                               EQU              8           ; CoreDebug DEMCR: 
+                                                            VC_BUSERR Position 
+                                                            
+  533 00000000 00000100 
+                       CoreDebug_DEMCR_VC_BUSERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_BUSERR
+_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_BUSERR Mask 
+  534 00000000         
+  535 00000000 00000007 
+                       CoreDebug_DEMCR_VC_STATERR_Pos
+                               EQU              7           ; CoreDebug DEMCR: 
+
+
+
+ARM Macro Assembler    Page 29 
+
+
+                                                            VC_STATERR Position
+                                                             
+  536 00000000 00000080 
+                       CoreDebug_DEMCR_VC_STATERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_STATER
+R_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_STATERR Mask 
+  537 00000000         
+  538 00000000 00000006 
+                       CoreDebug_DEMCR_VC_CHKERR_Pos
+                               EQU              6           ; CoreDebug DEMCR: 
+                                                            VC_CHKERR Position 
+                                                            
+  539 00000000 00000040 
+                       CoreDebug_DEMCR_VC_CHKERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_CHKERR
+_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_CHKERR Mask 
+  540 00000000         
+  541 00000000 00000005 
+                       CoreDebug_DEMCR_VC_NOCPERR_Pos
+                               EQU              5           ; CoreDebug DEMCR: 
+                                                            VC_NOCPERR Position
+                                                             
+  542 00000000 00000020 
+                       CoreDebug_DEMCR_VC_NOCPERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_NOCPER
+R_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_NOCPERR Mask 
+  543 00000000         
+  544 00000000 00000004 
+                       CoreDebug_DEMCR_VC_MMERR_Pos
+                               EQU              4           ; CoreDebug DEMCR: 
+                                                            VC_MMERR Position 
+  545 00000000 00000010 
+                       CoreDebug_DEMCR_VC_MMERR_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_MMERR_
+Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_MMERR Mask 
+  546 00000000         
+  547 00000000 00000000 
+                       CoreDebug_DEMCR_VC_CORERESET_Pos
+                               EQU              0           ; CoreDebug DEMCR: 
+                                                            VC_CORERESET Positi
+                                                            on 
+  548 00000000 00000001 
+                       CoreDebug_DEMCR_VC_CORERESET_Msk
+                               EQU              (1 << CoreDebug_DEMCR_VC_CORERE
+SET_Pos) 
+                                                            ; CoreDebug DEMCR: 
+                                                            VC_CORERESET Mask 
+  549 00000000         
+  550 00000000         
+  551 00000000         ;  Memory mapping of Cortex-M3 Hardware 
+  552 00000000         ; SCS_BASE            EQU        (0xE000E000)           
+
+
+
+ARM Macro Assembler    Page 30 
+
+
+                                      ; System Control Space Base Address 
+  553 00000000         ; ITM_BASE            EQU        (0xE0000000)           
+                                      ; ITM Base Address                  
+  554 00000000         ; CoreDebug_BASE      EQU        (0xE000EDF0)           
+                                      ; Core Debug Base Address           
+  555 00000000         ; SysTick_BASE        EQU        (SCS_BASE +  0x0010)   
+                                      ; SysTick Base Address              
+  556 00000000         ; NVIC_BASE           EQU        (SCS_BASE +  0x0100)   
+                                      ; NVIC Base Address                 
+  557 00000000         ; SCB_BASE            EQU        (SCS_BASE +  0x0D00)   
+                                      ; System Control Block Base Address 
+  558 00000000         
+  559 00000000         ; InterruptType       EQU        (SCS_BASE)     ; Interr
+                       upt Type Register           
+  560 00000000         ; SCB                 EQU        (SCB_BASE)     ; SCB co
+                       nfiguration struct          
+  561 00000000         ; SysTick             EQU        (SysTick_BASE) ; SysTic
+                       k configuration struct      
+  562 00000000         ; NVIC                EQU        (NVIC_BASE)    ; NVIC c
+                       onfiguration struct         
+  563 00000000         ; ITM                 EQU        (ITM_BASE)     ; ITM co
+                       nfiguration struct          
+  564 00000000         ; CoreDebug           EQU        (CoreDebug_BASE)   ; Co
+                       re Debug configuration struct   
+  565 00000000         
+  566 00000000         ; MPU_BASE            EQU        (SCS_BASE +  0x0D90)   
+                                      ; Memory Protection Unit            
+  567 00000000         ; MPU                    EQU        (MPU_BASE)     ; Mem
+                       ory Protection Unit            
+  568 00000000         
+  569 00000000         
+  570 00000000         
+  571 00000000                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\core_cm3_constant.d -o.\objects\core_cm3_constant.o -
+I.\RTE\_Target_1 -IC:\Users\user\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\
+Core\Include -IC:\Users\user\AppData\Local\Arm\Packs\TexasInstruments\MSP432P4x
+x_DFP\3.2.6\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_V
+ERSION SETA 528" --predefine="_RTE_ SETA 1" --predefine="__MSP432P401R__ SETA 1
+" --list=.\listings\core_cm3_constant.lst core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+CoreDebug_DCRDR 00000008
+
+Symbol: CoreDebug_DCRDR
+   Definitions
+      At line 463 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DCRDR unused
+CoreDebug_DCRSR 00000004
+
+Symbol: CoreDebug_DCRSR
+   Definitions
+      At line 462 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DCRSR unused
+CoreDebug_DCRSR_REGSEL_Msk 0000001F
+
+Symbol: CoreDebug_DCRSR_REGSEL_Msk
+   Definitions
+      At line 508 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DCRSR_REGSEL_Msk unused
+CoreDebug_DCRSR_REGSEL_Pos 00000000
+
+Symbol: CoreDebug_DCRSR_REGSEL_Pos
+   Definitions
+      At line 507 in file core_cm3_constant.s
+   Uses
+      At line 508 in file core_cm3_constant.s
+Comment: CoreDebug_DCRSR_REGSEL_Pos used once
+CoreDebug_DCRSR_REGWnR_Msk 00010000
+
+Symbol: CoreDebug_DCRSR_REGWnR_Msk
+   Definitions
+      At line 505 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DCRSR_REGWnR_Msk unused
+CoreDebug_DCRSR_REGWnR_Pos 00000010
+
+Symbol: CoreDebug_DCRSR_REGWnR_Pos
+   Definitions
+      At line 504 in file core_cm3_constant.s
+   Uses
+      At line 505 in file core_cm3_constant.s
+Comment: CoreDebug_DCRSR_REGWnR_Pos used once
+CoreDebug_DEMCR 0000000C
+
+Symbol: CoreDebug_DEMCR
+   Definitions
+      At line 464 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR unused
+CoreDebug_DEMCR_MON_EN_Msk 00010000
+
+Symbol: CoreDebug_DEMCR_MON_EN_Msk
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 524 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_MON_EN_Msk unused
+CoreDebug_DEMCR_MON_EN_Pos 00000010
+
+Symbol: CoreDebug_DEMCR_MON_EN_Pos
+   Definitions
+      At line 523 in file core_cm3_constant.s
+   Uses
+      At line 524 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_MON_EN_Pos used once
+CoreDebug_DEMCR_MON_PEND_Msk 00020000
+
+Symbol: CoreDebug_DEMCR_MON_PEND_Msk
+   Definitions
+      At line 521 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_MON_PEND_Msk unused
+CoreDebug_DEMCR_MON_PEND_Pos 00000011
+
+Symbol: CoreDebug_DEMCR_MON_PEND_Pos
+   Definitions
+      At line 520 in file core_cm3_constant.s
+   Uses
+      At line 521 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_MON_PEND_Pos used once
+CoreDebug_DEMCR_MON_REQ_Msk 00080000
+
+Symbol: CoreDebug_DEMCR_MON_REQ_Msk
+   Definitions
+      At line 515 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_MON_REQ_Msk unused
+CoreDebug_DEMCR_MON_REQ_Pos 00000013
+
+Symbol: CoreDebug_DEMCR_MON_REQ_Pos
+   Definitions
+      At line 514 in file core_cm3_constant.s
+   Uses
+      At line 515 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_MON_REQ_Pos used once
+CoreDebug_DEMCR_MON_STEP_Msk 00040000
+
+Symbol: CoreDebug_DEMCR_MON_STEP_Msk
+   Definitions
+      At line 518 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_MON_STEP_Msk unused
+CoreDebug_DEMCR_MON_STEP_Pos 00000012
+
+Symbol: CoreDebug_DEMCR_MON_STEP_Pos
+   Definitions
+      At line 517 in file core_cm3_constant.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 518 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_MON_STEP_Pos used once
+CoreDebug_DEMCR_TRCENA_Msk 01000000
+
+Symbol: CoreDebug_DEMCR_TRCENA_Msk
+   Definitions
+      At line 512 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_TRCENA_Msk unused
+CoreDebug_DEMCR_TRCENA_Pos 00000018
+
+Symbol: CoreDebug_DEMCR_TRCENA_Pos
+   Definitions
+      At line 511 in file core_cm3_constant.s
+   Uses
+      At line 512 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_TRCENA_Pos used once
+CoreDebug_DEMCR_VC_BUSERR_Msk 00000100
+
+Symbol: CoreDebug_DEMCR_VC_BUSERR_Msk
+   Definitions
+      At line 533 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_BUSERR_Msk unused
+CoreDebug_DEMCR_VC_BUSERR_Pos 00000008
+
+Symbol: CoreDebug_DEMCR_VC_BUSERR_Pos
+   Definitions
+      At line 532 in file core_cm3_constant.s
+   Uses
+      At line 533 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_BUSERR_Pos used once
+CoreDebug_DEMCR_VC_CHKERR_Msk 00000040
+
+Symbol: CoreDebug_DEMCR_VC_CHKERR_Msk
+   Definitions
+      At line 539 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_CHKERR_Msk unused
+CoreDebug_DEMCR_VC_CHKERR_Pos 00000006
+
+Symbol: CoreDebug_DEMCR_VC_CHKERR_Pos
+   Definitions
+      At line 538 in file core_cm3_constant.s
+   Uses
+      At line 539 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_CHKERR_Pos used once
+CoreDebug_DEMCR_VC_CORERESET_Msk 00000001
+
+Symbol: CoreDebug_DEMCR_VC_CORERESET_Msk
+   Definitions
+      At line 548 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_CORERESET_Msk unused
+CoreDebug_DEMCR_VC_CORERESET_Pos 00000000
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: CoreDebug_DEMCR_VC_CORERESET_Pos
+   Definitions
+      At line 547 in file core_cm3_constant.s
+   Uses
+      At line 548 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_CORERESET_Pos used once
+CoreDebug_DEMCR_VC_HARDERR_Msk 00000400
+
+Symbol: CoreDebug_DEMCR_VC_HARDERR_Msk
+   Definitions
+      At line 527 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_HARDERR_Msk unused
+CoreDebug_DEMCR_VC_HARDERR_Pos 0000000A
+
+Symbol: CoreDebug_DEMCR_VC_HARDERR_Pos
+   Definitions
+      At line 526 in file core_cm3_constant.s
+   Uses
+      At line 527 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_HARDERR_Pos used once
+CoreDebug_DEMCR_VC_INTERR_Msk 00000200
+
+Symbol: CoreDebug_DEMCR_VC_INTERR_Msk
+   Definitions
+      At line 530 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_INTERR_Msk unused
+CoreDebug_DEMCR_VC_INTERR_Pos 00000009
+
+Symbol: CoreDebug_DEMCR_VC_INTERR_Pos
+   Definitions
+      At line 529 in file core_cm3_constant.s
+   Uses
+      At line 530 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_INTERR_Pos used once
+CoreDebug_DEMCR_VC_MMERR_Msk 00000010
+
+Symbol: CoreDebug_DEMCR_VC_MMERR_Msk
+   Definitions
+      At line 545 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_MMERR_Msk unused
+CoreDebug_DEMCR_VC_MMERR_Pos 00000004
+
+Symbol: CoreDebug_DEMCR_VC_MMERR_Pos
+   Definitions
+      At line 544 in file core_cm3_constant.s
+   Uses
+      At line 545 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_MMERR_Pos used once
+CoreDebug_DEMCR_VC_NOCPERR_Msk 00000020
+
+Symbol: CoreDebug_DEMCR_VC_NOCPERR_Msk
+   Definitions
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 542 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_NOCPERR_Msk unused
+CoreDebug_DEMCR_VC_NOCPERR_Pos 00000005
+
+Symbol: CoreDebug_DEMCR_VC_NOCPERR_Pos
+   Definitions
+      At line 541 in file core_cm3_constant.s
+   Uses
+      At line 542 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_NOCPERR_Pos used once
+CoreDebug_DEMCR_VC_STATERR_Msk 00000080
+
+Symbol: CoreDebug_DEMCR_VC_STATERR_Msk
+   Definitions
+      At line 536 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DEMCR_VC_STATERR_Msk unused
+CoreDebug_DEMCR_VC_STATERR_Pos 00000007
+
+Symbol: CoreDebug_DEMCR_VC_STATERR_Pos
+   Definitions
+      At line 535 in file core_cm3_constant.s
+   Uses
+      At line 536 in file core_cm3_constant.s
+Comment: CoreDebug_DEMCR_VC_STATERR_Pos used once
+CoreDebug_DHCSR 00000000
+
+Symbol: CoreDebug_DHCSR
+   Definitions
+      At line 461 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR unused
+CoreDebug_DHCSR_C_DEBUGEN_Msk 00000001
+
+Symbol: CoreDebug_DHCSR_C_DEBUGEN_Msk
+   Definitions
+      At line 501 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_C_DEBUGEN_Msk unused
+CoreDebug_DHCSR_C_DEBUGEN_Pos 00000000
+
+Symbol: CoreDebug_DHCSR_C_DEBUGEN_Pos
+   Definitions
+      At line 500 in file core_cm3_constant.s
+   Uses
+      At line 501 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_C_DEBUGEN_Pos used once
+CoreDebug_DHCSR_C_HALT_Msk 00000002
+
+Symbol: CoreDebug_DHCSR_C_HALT_Msk
+   Definitions
+      At line 498 in file core_cm3_constant.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: CoreDebug_DHCSR_C_HALT_Msk unused
+CoreDebug_DHCSR_C_HALT_Pos 00000001
+
+Symbol: CoreDebug_DHCSR_C_HALT_Pos
+   Definitions
+      At line 497 in file core_cm3_constant.s
+   Uses
+      At line 498 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_C_HALT_Pos used once
+CoreDebug_DHCSR_C_MASKINTS_Msk 00000008
+
+Symbol: CoreDebug_DHCSR_C_MASKINTS_Msk
+   Definitions
+      At line 492 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_C_MASKINTS_Msk unused
+CoreDebug_DHCSR_C_MASKINTS_Pos 00000003
+
+Symbol: CoreDebug_DHCSR_C_MASKINTS_Pos
+   Definitions
+      At line 491 in file core_cm3_constant.s
+   Uses
+      At line 492 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_C_MASKINTS_Pos used once
+CoreDebug_DHCSR_C_SNAPSTALL_Msk 00000020
+
+Symbol: CoreDebug_DHCSR_C_SNAPSTALL_Msk
+   Definitions
+      At line 489 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_C_SNAPSTALL_Msk unused
+CoreDebug_DHCSR_C_SNAPSTALL_Pos 00000005
+
+Symbol: CoreDebug_DHCSR_C_SNAPSTALL_Pos
+   Definitions
+      At line 488 in file core_cm3_constant.s
+   Uses
+      At line 489 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_C_SNAPSTALL_Pos used once
+CoreDebug_DHCSR_C_STEP_Msk 00000004
+
+Symbol: CoreDebug_DHCSR_C_STEP_Msk
+   Definitions
+      At line 495 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_C_STEP_Msk unused
+CoreDebug_DHCSR_C_STEP_Pos 00000002
+
+Symbol: CoreDebug_DHCSR_C_STEP_Pos
+   Definitions
+      At line 494 in file core_cm3_constant.s
+   Uses
+      At line 495 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_C_STEP_Pos used once
+CoreDebug_DHCSR_DBGKEY_Msk FFFF0000
+
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: CoreDebug_DHCSR_DBGKEY_Msk
+   Definitions
+      At line 468 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_DBGKEY_Msk unused
+CoreDebug_DHCSR_DBGKEY_Pos 00000010
+
+Symbol: CoreDebug_DHCSR_DBGKEY_Pos
+   Definitions
+      At line 467 in file core_cm3_constant.s
+   Uses
+      At line 468 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_DBGKEY_Pos used once
+CoreDebug_DHCSR_S_HALT_Msk 00020000
+
+Symbol: CoreDebug_DHCSR_S_HALT_Msk
+   Definitions
+      At line 483 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_HALT_Msk unused
+CoreDebug_DHCSR_S_HALT_Pos 00000011
+
+Symbol: CoreDebug_DHCSR_S_HALT_Pos
+   Definitions
+      At line 482 in file core_cm3_constant.s
+   Uses
+      At line 483 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_HALT_Pos used once
+CoreDebug_DHCSR_S_LOCKUP_Msk 00080000
+
+Symbol: CoreDebug_DHCSR_S_LOCKUP_Msk
+   Definitions
+      At line 477 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_LOCKUP_Msk unused
+CoreDebug_DHCSR_S_LOCKUP_Pos 00000013
+
+Symbol: CoreDebug_DHCSR_S_LOCKUP_Pos
+   Definitions
+      At line 476 in file core_cm3_constant.s
+   Uses
+      At line 477 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_LOCKUP_Pos used once
+CoreDebug_DHCSR_S_REGRDY_Msk 00010000
+
+Symbol: CoreDebug_DHCSR_S_REGRDY_Msk
+   Definitions
+      At line 486 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_REGRDY_Msk unused
+CoreDebug_DHCSR_S_REGRDY_Pos 00000010
+
+Symbol: CoreDebug_DHCSR_S_REGRDY_Pos
+   Definitions
+      At line 485 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      At line 486 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_REGRDY_Pos used once
+CoreDebug_DHCSR_S_RESET_ST_Msk 02000000
+
+Symbol: CoreDebug_DHCSR_S_RESET_ST_Msk
+   Definitions
+      At line 471 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_RESET_ST_Msk unused
+CoreDebug_DHCSR_S_RESET_ST_Pos 00000019
+
+Symbol: CoreDebug_DHCSR_S_RESET_ST_Pos
+   Definitions
+      At line 470 in file core_cm3_constant.s
+   Uses
+      At line 471 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_RESET_ST_Pos used once
+CoreDebug_DHCSR_S_RETIRE_ST_Msk 01000000
+
+Symbol: CoreDebug_DHCSR_S_RETIRE_ST_Msk
+   Definitions
+      At line 474 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_RETIRE_ST_Msk unused
+CoreDebug_DHCSR_S_RETIRE_ST_Pos 00000018
+
+Symbol: CoreDebug_DHCSR_S_RETIRE_ST_Pos
+   Definitions
+      At line 473 in file core_cm3_constant.s
+   Uses
+      At line 474 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_RETIRE_ST_Pos used once
+CoreDebug_DHCSR_S_SLEEP_Msk 00040000
+
+Symbol: CoreDebug_DHCSR_S_SLEEP_Msk
+   Definitions
+      At line 480 in file core_cm3_constant.s
+   Uses
+      None
+Comment: CoreDebug_DHCSR_S_SLEEP_Msk unused
+CoreDebug_DHCSR_S_SLEEP_Pos 00000012
+
+Symbol: CoreDebug_DHCSR_S_SLEEP_Pos
+   Definitions
+      At line 479 in file core_cm3_constant.s
+   Uses
+      At line 480 in file core_cm3_constant.s
+Comment: CoreDebug_DHCSR_S_SLEEP_Pos used once
+ITM_IMCR_INTEGRATION_Msk 00000001
+
+Symbol: ITM_IMCR_INTEGRATION_Msk
+   Definitions
+      At line 351 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_IMCR_INTEGRATION_Msk unused
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Absolute symbols
+
+ITM_IMCR_INTEGRATION_Pos 00000000
+
+Symbol: ITM_IMCR_INTEGRATION_Pos
+   Definitions
+      At line 350 in file core_cm3_constant.s
+   Uses
+      At line 351 in file core_cm3_constant.s
+Comment: ITM_IMCR_INTEGRATION_Pos used once
+ITM_IRR_ATREADYM_Msk 00000001
+
+Symbol: ITM_IRR_ATREADYM_Msk
+   Definitions
+      At line 347 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_IRR_ATREADYM_Msk unused
+ITM_IRR_ATREADYM_Pos 00000000
+
+Symbol: ITM_IRR_ATREADYM_Pos
+   Definitions
+      At line 346 in file core_cm3_constant.s
+   Uses
+      At line 347 in file core_cm3_constant.s
+Comment: ITM_IRR_ATREADYM_Pos used once
+ITM_IWR_ATVALIDM_Msk 00000001
+
+Symbol: ITM_IWR_ATVALIDM_Msk
+   Definitions
+      At line 343 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_IWR_ATVALIDM_Msk unused
+ITM_IWR_ATVALIDM_Pos 00000000
+
+Symbol: ITM_IWR_ATVALIDM_Pos
+   Definitions
+      At line 342 in file core_cm3_constant.s
+   Uses
+      At line 343 in file core_cm3_constant.s
+Comment: ITM_IWR_ATVALIDM_Pos used once
+ITM_LSR_Access_Msk 00000002
+
+Symbol: ITM_LSR_Access_Msk
+   Definitions
+      At line 358 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_LSR_Access_Msk unused
+ITM_LSR_Access_Pos 00000001
+
+Symbol: ITM_LSR_Access_Pos
+   Definitions
+      At line 357 in file core_cm3_constant.s
+   Uses
+      At line 358 in file core_cm3_constant.s
+Comment: ITM_LSR_Access_Pos used once
+ITM_LSR_ByteAcc_Msk 00000004
+
+Symbol: ITM_LSR_ByteAcc_Msk
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 355 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_LSR_ByteAcc_Msk unused
+ITM_LSR_ByteAcc_Pos 00000002
+
+Symbol: ITM_LSR_ByteAcc_Pos
+   Definitions
+      At line 354 in file core_cm3_constant.s
+   Uses
+      At line 355 in file core_cm3_constant.s
+Comment: ITM_LSR_ByteAcc_Pos used once
+ITM_LSR_Present_Msk 00000001
+
+Symbol: ITM_LSR_Present_Msk
+   Definitions
+      At line 361 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_LSR_Present_Msk unused
+ITM_LSR_Present_Pos 00000000
+
+Symbol: ITM_LSR_Present_Pos
+   Definitions
+      At line 360 in file core_cm3_constant.s
+   Uses
+      At line 361 in file core_cm3_constant.s
+Comment: ITM_LSR_Present_Pos used once
+ITM_TCR_ATBID_Msk 007F0000
+
+Symbol: ITM_TCR_ATBID_Msk
+   Definitions
+      At line 321 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_ATBID_Msk unused
+ITM_TCR_ATBID_Pos 00000010
+
+Symbol: ITM_TCR_ATBID_Pos
+   Definitions
+      At line 320 in file core_cm3_constant.s
+   Uses
+      At line 321 in file core_cm3_constant.s
+Comment: ITM_TCR_ATBID_Pos used once
+ITM_TCR_BUSY_Msk 00800000
+
+Symbol: ITM_TCR_BUSY_Msk
+   Definitions
+      At line 318 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_BUSY_Msk unused
+ITM_TCR_BUSY_Pos 00000017
+
+Symbol: ITM_TCR_BUSY_Pos
+   Definitions
+      At line 317 in file core_cm3_constant.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 318 in file core_cm3_constant.s
+Comment: ITM_TCR_BUSY_Pos used once
+ITM_TCR_DWTENA_Msk 00000008
+
+Symbol: ITM_TCR_DWTENA_Msk
+   Definitions
+      At line 330 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_DWTENA_Msk unused
+ITM_TCR_DWTENA_Pos 00000003
+
+Symbol: ITM_TCR_DWTENA_Pos
+   Definitions
+      At line 329 in file core_cm3_constant.s
+   Uses
+      At line 330 in file core_cm3_constant.s
+Comment: ITM_TCR_DWTENA_Pos used once
+ITM_TCR_ITMENA_Msk 00000001
+
+Symbol: ITM_TCR_ITMENA_Msk
+   Definitions
+      At line 339 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_ITMENA_Msk unused
+ITM_TCR_ITMENA_Pos 00000000
+
+Symbol: ITM_TCR_ITMENA_Pos
+   Definitions
+      At line 338 in file core_cm3_constant.s
+   Uses
+      At line 339 in file core_cm3_constant.s
+Comment: ITM_TCR_ITMENA_Pos used once
+ITM_TCR_SWOENA_Msk 00000010
+
+Symbol: ITM_TCR_SWOENA_Msk
+   Definitions
+      At line 327 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_SWOENA_Msk unused
+ITM_TCR_SWOENA_Pos 00000004
+
+Symbol: ITM_TCR_SWOENA_Pos
+   Definitions
+      At line 326 in file core_cm3_constant.s
+   Uses
+      At line 327 in file core_cm3_constant.s
+Comment: ITM_TCR_SWOENA_Pos used once
+ITM_TCR_SYNCENA_Msk 00000004
+
+Symbol: ITM_TCR_SYNCENA_Msk
+   Definitions
+      At line 333 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_SYNCENA_Msk unused
+ITM_TCR_SYNCENA_Pos 00000002
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: ITM_TCR_SYNCENA_Pos
+   Definitions
+      At line 332 in file core_cm3_constant.s
+   Uses
+      At line 333 in file core_cm3_constant.s
+Comment: ITM_TCR_SYNCENA_Pos used once
+ITM_TCR_TSENA_Msk 00000002
+
+Symbol: ITM_TCR_TSENA_Msk
+   Definitions
+      At line 336 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_TSENA_Msk unused
+ITM_TCR_TSENA_Pos 00000001
+
+Symbol: ITM_TCR_TSENA_Pos
+   Definitions
+      At line 335 in file core_cm3_constant.s
+   Uses
+      At line 336 in file core_cm3_constant.s
+Comment: ITM_TCR_TSENA_Pos used once
+ITM_TCR_TSPrescale_Msk 00000300
+
+Symbol: ITM_TCR_TSPrescale_Msk
+   Definitions
+      At line 324 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TCR_TSPrescale_Msk unused
+ITM_TCR_TSPrescale_Pos 00000008
+
+Symbol: ITM_TCR_TSPrescale_Pos
+   Definitions
+      At line 323 in file core_cm3_constant.s
+   Uses
+      At line 324 in file core_cm3_constant.s
+Comment: ITM_TCR_TSPrescale_Pos used once
+ITM_TPR_PRIVMASK_Msk 0000000F
+
+Symbol: ITM_TPR_PRIVMASK_Msk
+   Definitions
+      At line 314 in file core_cm3_constant.s
+   Uses
+      None
+Comment: ITM_TPR_PRIVMASK_Msk unused
+ITM_TPR_PRIVMASK_Pos 00000000
+
+Symbol: ITM_TPR_PRIVMASK_Pos
+   Definitions
+      At line 313 in file core_cm3_constant.s
+   Uses
+      At line 314 in file core_cm3_constant.s
+Comment: ITM_TPR_PRIVMASK_Pos used once
+InterruptType_ACTLR 00000008
+
+Symbol: InterruptType_ACTLR
+   Definitions
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 366 in file core_cm3_constant.s
+   Uses
+      None
+Comment: InterruptType_ACTLR unused
+InterruptType_ACTLR_DISDEFWBUF_Msk 00000002
+
+Symbol: InterruptType_ACTLR_DISDEFWBUF_Msk
+   Definitions
+      At line 378 in file core_cm3_constant.s
+   Uses
+      None
+Comment: InterruptType_ACTLR_DISDEFWBUF_Msk unused
+InterruptType_ACTLR_DISDEFWBUF_Pos 00000001
+
+Symbol: InterruptType_ACTLR_DISDEFWBUF_Pos
+   Definitions
+      At line 377 in file core_cm3_constant.s
+   Uses
+      At line 378 in file core_cm3_constant.s
+Comment: InterruptType_ACTLR_DISDEFWBUF_Pos used once
+InterruptType_ACTLR_DISFOLD_Msk 00000004
+
+Symbol: InterruptType_ACTLR_DISFOLD_Msk
+   Definitions
+      At line 375 in file core_cm3_constant.s
+   Uses
+      None
+Comment: InterruptType_ACTLR_DISFOLD_Msk unused
+InterruptType_ACTLR_DISFOLD_Pos 00000002
+
+Symbol: InterruptType_ACTLR_DISFOLD_Pos
+   Definitions
+      At line 374 in file core_cm3_constant.s
+   Uses
+      At line 375 in file core_cm3_constant.s
+Comment: InterruptType_ACTLR_DISFOLD_Pos used once
+InterruptType_ACTLR_DISMCYCINT_Msk 00000001
+
+Symbol: InterruptType_ACTLR_DISMCYCINT_Msk
+   Definitions
+      At line 381 in file core_cm3_constant.s
+   Uses
+      None
+Comment: InterruptType_ACTLR_DISMCYCINT_Msk unused
+InterruptType_ACTLR_DISMCYCINT_Pos 00000000
+
+Symbol: InterruptType_ACTLR_DISMCYCINT_Pos
+   Definitions
+      At line 380 in file core_cm3_constant.s
+   Uses
+      At line 381 in file core_cm3_constant.s
+Comment: InterruptType_ACTLR_DISMCYCINT_Pos used once
+InterruptType_ICTR 00000004
+
+Symbol: InterruptType_ICTR
+   Definitions
+      At line 365 in file core_cm3_constant.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: InterruptType_ICTR unused
+InterruptType_ICTR_INTLINESNUM_Msk 0000001F
+
+Symbol: InterruptType_ICTR_INTLINESNUM_Msk
+   Definitions
+      At line 371 in file core_cm3_constant.s
+   Uses
+      None
+Comment: InterruptType_ICTR_INTLINESNUM_Msk unused
+InterruptType_ICTR_INTLINESNUM_Pos 00000000
+
+Symbol: InterruptType_ICTR_INTLINESNUM_Pos
+   Definitions
+      At line 370 in file core_cm3_constant.s
+   Uses
+      At line 371 in file core_cm3_constant.s
+Comment: InterruptType_ICTR_INTLINESNUM_Pos used once
+MPUTYPE 00000000
+
+Symbol: MPUTYPE
+   Definitions
+      At line 385 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPUTYPE unused
+MPU_CTRL 00000004
+
+Symbol: MPU_CTRL
+   Definitions
+      At line 386 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_CTRL unused
+MPU_CTRL_ENABLE_Msk 00000001
+
+Symbol: MPU_CTRL_ENABLE_Msk
+   Definitions
+      At line 415 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_CTRL_ENABLE_Msk unused
+MPU_CTRL_ENABLE_Pos 00000000
+
+Symbol: MPU_CTRL_ENABLE_Pos
+   Definitions
+      At line 414 in file core_cm3_constant.s
+   Uses
+      At line 415 in file core_cm3_constant.s
+Comment: MPU_CTRL_ENABLE_Pos used once
+MPU_CTRL_HFNMIENA_Msk 00000002
+
+Symbol: MPU_CTRL_HFNMIENA_Msk
+   Definitions
+      At line 412 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_CTRL_HFNMIENA_Msk unused
+MPU_CTRL_HFNMIENA_Pos 00000001
+
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: MPU_CTRL_HFNMIENA_Pos
+   Definitions
+      At line 411 in file core_cm3_constant.s
+   Uses
+      At line 412 in file core_cm3_constant.s
+Comment: MPU_CTRL_HFNMIENA_Pos used once
+MPU_CTRL_PRIVDEFENA_Msk 00000004
+
+Symbol: MPU_CTRL_PRIVDEFENA_Msk
+   Definitions
+      At line 409 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_CTRL_PRIVDEFENA_Msk unused
+MPU_CTRL_PRIVDEFENA_Pos 00000002
+
+Symbol: MPU_CTRL_PRIVDEFENA_Pos
+   Definitions
+      At line 408 in file core_cm3_constant.s
+   Uses
+      At line 409 in file core_cm3_constant.s
+Comment: MPU_CTRL_PRIVDEFENA_Pos used once
+MPU_RASR 00000010
+
+Symbol: MPU_RASR
+   Definitions
+      At line 389 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR unused
+MPU_RASR_A1 00000018
+
+Symbol: MPU_RASR_A1
+   Definitions
+      At line 391 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_A1 unused
+MPU_RASR_A2 00000020
+
+Symbol: MPU_RASR_A2
+   Definitions
+      At line 393 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_A2 unused
+MPU_RASR_A3 00000028
+
+Symbol: MPU_RASR_A3
+   Definitions
+      At line 395 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_A3 unused
+MPU_RASR_AP_Msk 07000000
+
+Symbol: MPU_RASR_AP_Msk
+   Definitions
+      At line 436 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: MPU_RASR_AP_Msk unused
+MPU_RASR_AP_Pos 00000018
+
+Symbol: MPU_RASR_AP_Pos
+   Definitions
+      At line 435 in file core_cm3_constant.s
+   Uses
+      At line 436 in file core_cm3_constant.s
+Comment: MPU_RASR_AP_Pos used once
+MPU_RASR_B_Msk 00010000
+
+Symbol: MPU_RASR_B_Msk
+   Definitions
+      At line 448 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_B_Msk unused
+MPU_RASR_B_Pos 00000010
+
+Symbol: MPU_RASR_B_Pos
+   Definitions
+      At line 447 in file core_cm3_constant.s
+   Uses
+      At line 448 in file core_cm3_constant.s
+Comment: MPU_RASR_B_Pos used once
+MPU_RASR_C_Msk 00020000
+
+Symbol: MPU_RASR_C_Msk
+   Definitions
+      At line 445 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_C_Msk unused
+MPU_RASR_C_Pos 00000011
+
+Symbol: MPU_RASR_C_Pos
+   Definitions
+      At line 444 in file core_cm3_constant.s
+   Uses
+      At line 445 in file core_cm3_constant.s
+Comment: MPU_RASR_C_Pos used once
+MPU_RASR_ENA_Msk 0000001F
+
+Symbol: MPU_RASR_ENA_Msk
+   Definitions
+      At line 457 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_ENA_Msk unused
+MPU_RASR_ENA_Pos 00000000
+
+Symbol: MPU_RASR_ENA_Pos
+   Definitions
+      At line 456 in file core_cm3_constant.s
+   Uses
+      At line 457 in file core_cm3_constant.s
+Comment: MPU_RASR_ENA_Pos used once
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Absolute symbols
+
+MPU_RASR_SIZE_Msk 0000003E
+
+Symbol: MPU_RASR_SIZE_Msk
+   Definitions
+      At line 454 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_SIZE_Msk unused
+MPU_RASR_SIZE_Pos 00000001
+
+Symbol: MPU_RASR_SIZE_Pos
+   Definitions
+      At line 453 in file core_cm3_constant.s
+   Uses
+      At line 454 in file core_cm3_constant.s
+Comment: MPU_RASR_SIZE_Pos used once
+MPU_RASR_SRD_Msk 0000FF00
+
+Symbol: MPU_RASR_SRD_Msk
+   Definitions
+      At line 451 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_SRD_Msk unused
+MPU_RASR_SRD_Pos 00000008
+
+Symbol: MPU_RASR_SRD_Pos
+   Definitions
+      At line 450 in file core_cm3_constant.s
+   Uses
+      At line 451 in file core_cm3_constant.s
+Comment: MPU_RASR_SRD_Pos used once
+MPU_RASR_S_Msk 00040000
+
+Symbol: MPU_RASR_S_Msk
+   Definitions
+      At line 442 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_S_Msk unused
+MPU_RASR_S_Pos 00000012
+
+Symbol: MPU_RASR_S_Pos
+   Definitions
+      At line 441 in file core_cm3_constant.s
+   Uses
+      At line 442 in file core_cm3_constant.s
+Comment: MPU_RASR_S_Pos used once
+MPU_RASR_TEX_Msk 00380000
+
+Symbol: MPU_RASR_TEX_Msk
+   Definitions
+      At line 439 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_TEX_Msk unused
+MPU_RASR_TEX_Pos 00000013
+
+Symbol: MPU_RASR_TEX_Pos
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 438 in file core_cm3_constant.s
+   Uses
+      At line 439 in file core_cm3_constant.s
+Comment: MPU_RASR_TEX_Pos used once
+MPU_RASR_XN_Msk 10000000
+
+Symbol: MPU_RASR_XN_Msk
+   Definitions
+      At line 433 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RASR_XN_Msk unused
+MPU_RASR_XN_Pos 0000001C
+
+Symbol: MPU_RASR_XN_Pos
+   Definitions
+      At line 432 in file core_cm3_constant.s
+   Uses
+      At line 433 in file core_cm3_constant.s
+Comment: MPU_RASR_XN_Pos used once
+MPU_RBAR 0000000C
+
+Symbol: MPU_RBAR
+   Definitions
+      At line 388 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR unused
+MPU_RBAR_A1 00000014
+
+Symbol: MPU_RBAR_A1
+   Definitions
+      At line 390 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR_A1 unused
+MPU_RBAR_A2 0000001C
+
+Symbol: MPU_RBAR_A2
+   Definitions
+      At line 392 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR_A2 unused
+MPU_RBAR_A3 00000024
+
+Symbol: MPU_RBAR_A3
+   Definitions
+      At line 394 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR_A3 unused
+MPU_RBAR_ADDR_Msk FFFFFFE0
+
+Symbol: MPU_RBAR_ADDR_Msk
+   Definitions
+      At line 423 in file core_cm3_constant.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: MPU_RBAR_ADDR_Msk unused
+MPU_RBAR_ADDR_Pos 00000005
+
+Symbol: MPU_RBAR_ADDR_Pos
+   Definitions
+      At line 422 in file core_cm3_constant.s
+   Uses
+      At line 423 in file core_cm3_constant.s
+Comment: MPU_RBAR_ADDR_Pos used once
+MPU_RBAR_REGION_Msk 0000000F
+
+Symbol: MPU_RBAR_REGION_Msk
+   Definitions
+      At line 429 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR_REGION_Msk unused
+MPU_RBAR_REGION_Pos 00000000
+
+Symbol: MPU_RBAR_REGION_Pos
+   Definitions
+      At line 428 in file core_cm3_constant.s
+   Uses
+      At line 429 in file core_cm3_constant.s
+Comment: MPU_RBAR_REGION_Pos used once
+MPU_RBAR_VALID_Msk 00000010
+
+Symbol: MPU_RBAR_VALID_Msk
+   Definitions
+      At line 426 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RBAR_VALID_Msk unused
+MPU_RBAR_VALID_Pos 00000004
+
+Symbol: MPU_RBAR_VALID_Pos
+   Definitions
+      At line 425 in file core_cm3_constant.s
+   Uses
+      At line 426 in file core_cm3_constant.s
+Comment: MPU_RBAR_VALID_Pos used once
+MPU_RNR 00000008
+
+Symbol: MPU_RNR
+   Definitions
+      At line 387 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RNR unused
+MPU_RNR_REGION_Msk 000000FF
+
+Symbol: MPU_RNR_REGION_Msk
+   Definitions
+      At line 419 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_RNR_REGION_Msk unused
+MPU_RNR_REGION_Pos 00000000
+
+
+
+ARM Macro Assembler    Page 20 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: MPU_RNR_REGION_Pos
+   Definitions
+      At line 418 in file core_cm3_constant.s
+   Uses
+      At line 419 in file core_cm3_constant.s
+Comment: MPU_RNR_REGION_Pos used once
+MPU_TYPE_DREGION_Msk 0000FF00
+
+Symbol: MPU_TYPE_DREGION_Msk
+   Definitions
+      At line 402 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_TYPE_DREGION_Msk unused
+MPU_TYPE_DREGION_Pos 00000008
+
+Symbol: MPU_TYPE_DREGION_Pos
+   Definitions
+      At line 401 in file core_cm3_constant.s
+   Uses
+      At line 402 in file core_cm3_constant.s
+Comment: MPU_TYPE_DREGION_Pos used once
+MPU_TYPE_IREGION_Msk 00FF0000
+
+Symbol: MPU_TYPE_IREGION_Msk
+   Definitions
+      At line 399 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_TYPE_IREGION_Msk unused
+MPU_TYPE_IREGION_Pos 00000010
+
+Symbol: MPU_TYPE_IREGION_Pos
+   Definitions
+      At line 398 in file core_cm3_constant.s
+   Uses
+      At line 399 in file core_cm3_constant.s
+Comment: MPU_TYPE_IREGION_Pos used once
+MPU_TYPE_SEPARATE_Msk 00000001
+
+Symbol: MPU_TYPE_SEPARATE_Msk
+   Definitions
+      At line 405 in file core_cm3_constant.s
+   Uses
+      None
+Comment: MPU_TYPE_SEPARATE_Msk unused
+MPU_TYPE_SEPARATE_Pos 00000000
+
+Symbol: MPU_TYPE_SEPARATE_Pos
+   Definitions
+      At line 404 in file core_cm3_constant.s
+   Uses
+      At line 405 in file core_cm3_constant.s
+Comment: MPU_TYPE_SEPARATE_Pos used once
+SCB_AIRCR_ENDIANESS_Msk 00008000
+
+Symbol: SCB_AIRCR_ENDIANESS_Msk
+   Definitions
+
+
+
+ARM Macro Assembler    Page 21 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 111 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_ENDIANESS_Msk unused
+SCB_AIRCR_ENDIANESS_Pos 0000000F
+
+Symbol: SCB_AIRCR_ENDIANESS_Pos
+   Definitions
+      At line 110 in file core_cm3_constant.s
+   Uses
+      At line 111 in file core_cm3_constant.s
+Comment: SCB_AIRCR_ENDIANESS_Pos used once
+SCB_AIRCR_PRIGROUP_Msk 00000700
+
+Symbol: SCB_AIRCR_PRIGROUP_Msk
+   Definitions
+      At line 114 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_PRIGROUP_Msk unused
+SCB_AIRCR_PRIGROUP_Pos 00000008
+
+Symbol: SCB_AIRCR_PRIGROUP_Pos
+   Definitions
+      At line 113 in file core_cm3_constant.s
+   Uses
+      At line 114 in file core_cm3_constant.s
+Comment: SCB_AIRCR_PRIGROUP_Pos used once
+SCB_AIRCR_SYSRESETREQ_Msk 00000004
+
+Symbol: SCB_AIRCR_SYSRESETREQ_Msk
+   Definitions
+      At line 117 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_SYSRESETREQ_Msk unused
+SCB_AIRCR_SYSRESETREQ_Pos 00000002
+
+Symbol: SCB_AIRCR_SYSRESETREQ_Pos
+   Definitions
+      At line 116 in file core_cm3_constant.s
+   Uses
+      At line 117 in file core_cm3_constant.s
+Comment: SCB_AIRCR_SYSRESETREQ_Pos used once
+SCB_AIRCR_VECTCLRACTIVE_Msk 00000002
+
+Symbol: SCB_AIRCR_VECTCLRACTIVE_Msk
+   Definitions
+      At line 120 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_VECTCLRACTIVE_Msk unused
+SCB_AIRCR_VECTCLRACTIVE_Pos 00000001
+
+Symbol: SCB_AIRCR_VECTCLRACTIVE_Pos
+   Definitions
+      At line 119 in file core_cm3_constant.s
+   Uses
+      At line 120 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 22 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: SCB_AIRCR_VECTCLRACTIVE_Pos used once
+SCB_AIRCR_VECTKEYSTAT_Msk FFFF0000
+
+Symbol: SCB_AIRCR_VECTKEYSTAT_Msk
+   Definitions
+      At line 108 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_VECTKEYSTAT_Msk unused
+SCB_AIRCR_VECTKEYSTAT_Pos 00000010
+
+Symbol: SCB_AIRCR_VECTKEYSTAT_Pos
+   Definitions
+      At line 107 in file core_cm3_constant.s
+   Uses
+      At line 108 in file core_cm3_constant.s
+Comment: SCB_AIRCR_VECTKEYSTAT_Pos used once
+SCB_AIRCR_VECTKEY_Msk FFFF0000
+
+Symbol: SCB_AIRCR_VECTKEY_Msk
+   Definitions
+      At line 105 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_VECTKEY_Msk unused
+SCB_AIRCR_VECTKEY_Pos 00000010
+
+Symbol: SCB_AIRCR_VECTKEY_Pos
+   Definitions
+      At line 104 in file core_cm3_constant.s
+   Uses
+      At line 105 in file core_cm3_constant.s
+Comment: SCB_AIRCR_VECTKEY_Pos used once
+SCB_AIRCR_VECTRESET_Msk 00000001
+
+Symbol: SCB_AIRCR_VECTRESET_Msk
+   Definitions
+      At line 123 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_AIRCR_VECTRESET_Msk unused
+SCB_AIRCR_VECTRESET_Pos 00000000
+
+Symbol: SCB_AIRCR_VECTRESET_Pos
+   Definitions
+      At line 122 in file core_cm3_constant.s
+   Uses
+      At line 123 in file core_cm3_constant.s
+Comment: SCB_AIRCR_VECTRESET_Pos used once
+SCB_CCR_BFHFNMIGN_Msk 00000100
+
+Symbol: SCB_CCR_BFHFNMIGN_Msk
+   Definitions
+      At line 140 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CCR_BFHFNMIGN_Msk unused
+SCB_CCR_BFHFNMIGN_Pos 00000008
+
+
+
+
+ARM Macro Assembler    Page 23 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: SCB_CCR_BFHFNMIGN_Pos
+   Definitions
+      At line 139 in file core_cm3_constant.s
+   Uses
+      At line 140 in file core_cm3_constant.s
+Comment: SCB_CCR_BFHFNMIGN_Pos used once
+SCB_CCR_DIV_0_TRP_Msk 00000010
+
+Symbol: SCB_CCR_DIV_0_TRP_Msk
+   Definitions
+      At line 143 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CCR_DIV_0_TRP_Msk unused
+SCB_CCR_DIV_0_TRP_Pos 00000004
+
+Symbol: SCB_CCR_DIV_0_TRP_Pos
+   Definitions
+      At line 142 in file core_cm3_constant.s
+   Uses
+      At line 143 in file core_cm3_constant.s
+Comment: SCB_CCR_DIV_0_TRP_Pos used once
+SCB_CCR_NONBASETHRDENA_Msk 00000001
+
+Symbol: SCB_CCR_NONBASETHRDENA_Msk
+   Definitions
+      At line 152 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CCR_NONBASETHRDENA_Msk unused
+SCB_CCR_NONBASETHRDENA_Pos 00000000
+
+Symbol: SCB_CCR_NONBASETHRDENA_Pos
+   Definitions
+      At line 151 in file core_cm3_constant.s
+   Uses
+      At line 152 in file core_cm3_constant.s
+Comment: SCB_CCR_NONBASETHRDENA_Pos used once
+SCB_CCR_STKALIGN_Msk 00000200
+
+Symbol: SCB_CCR_STKALIGN_Msk
+   Definitions
+      At line 137 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CCR_STKALIGN_Msk unused
+SCB_CCR_STKALIGN_Pos 00000009
+
+Symbol: SCB_CCR_STKALIGN_Pos
+   Definitions
+      At line 136 in file core_cm3_constant.s
+   Uses
+      At line 137 in file core_cm3_constant.s
+Comment: SCB_CCR_STKALIGN_Pos used once
+SCB_CCR_UNALIGN_TRP_Msk 00000008
+
+Symbol: SCB_CCR_UNALIGN_TRP_Msk
+   Definitions
+      At line 146 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 24 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: SCB_CCR_UNALIGN_TRP_Msk unused
+SCB_CCR_UNALIGN_TRP_Pos 00000003
+
+Symbol: SCB_CCR_UNALIGN_TRP_Pos
+   Definitions
+      At line 145 in file core_cm3_constant.s
+   Uses
+      At line 146 in file core_cm3_constant.s
+Comment: SCB_CCR_UNALIGN_TRP_Pos used once
+SCB_CCR_USERSETMPEND_Msk 00000002
+
+Symbol: SCB_CCR_USERSETMPEND_Msk
+   Definitions
+      At line 149 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CCR_USERSETMPEND_Msk unused
+SCB_CCR_USERSETMPEND_Pos 00000001
+
+Symbol: SCB_CCR_USERSETMPEND_Pos
+   Definitions
+      At line 148 in file core_cm3_constant.s
+   Uses
+      At line 149 in file core_cm3_constant.s
+Comment: SCB_CCR_USERSETMPEND_Pos used once
+SCB_CFSR_BUSFAULTSR_Msk 0000FF00
+
+Symbol: SCB_CFSR_BUSFAULTSR_Msk
+   Definitions
+      At line 202 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CFSR_BUSFAULTSR_Msk unused
+SCB_CFSR_BUSFAULTSR_Pos 00000008
+
+Symbol: SCB_CFSR_BUSFAULTSR_Pos
+   Definitions
+      At line 201 in file core_cm3_constant.s
+   Uses
+      At line 202 in file core_cm3_constant.s
+Comment: SCB_CFSR_BUSFAULTSR_Pos used once
+SCB_CFSR_MEMFAULTSR_Msk 000000FF
+
+Symbol: SCB_CFSR_MEMFAULTSR_Msk
+   Definitions
+      At line 205 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CFSR_MEMFAULTSR_Msk unused
+SCB_CFSR_MEMFAULTSR_Pos 00000000
+
+Symbol: SCB_CFSR_MEMFAULTSR_Pos
+   Definitions
+      At line 204 in file core_cm3_constant.s
+   Uses
+      At line 205 in file core_cm3_constant.s
+Comment: SCB_CFSR_MEMFAULTSR_Pos used once
+
+
+
+ARM Macro Assembler    Page 25 Alphabetic symbol ordering
+Absolute symbols
+
+SCB_CFSR_USGFAULTSR_Msk FFFF0000
+
+Symbol: SCB_CFSR_USGFAULTSR_Msk
+   Definitions
+      At line 199 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CFSR_USGFAULTSR_Msk unused
+SCB_CFSR_USGFAULTSR_Pos 00000010
+
+Symbol: SCB_CFSR_USGFAULTSR_Pos
+   Definitions
+      At line 198 in file core_cm3_constant.s
+   Uses
+      At line 199 in file core_cm3_constant.s
+Comment: SCB_CFSR_USGFAULTSR_Pos used once
+SCB_CPUID_IMPLEMENTER_Msk FF000000
+
+Symbol: SCB_CPUID_IMPLEMENTER_Msk
+   Definitions
+      At line 54 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CPUID_IMPLEMENTER_Msk unused
+SCB_CPUID_IMPLEMENTER_Pos 00000018
+
+Symbol: SCB_CPUID_IMPLEMENTER_Pos
+   Definitions
+      At line 53 in file core_cm3_constant.s
+   Uses
+      At line 54 in file core_cm3_constant.s
+Comment: SCB_CPUID_IMPLEMENTER_Pos used once
+SCB_CPUID_PARTNO_Msk 0000FFF0
+
+Symbol: SCB_CPUID_PARTNO_Msk
+   Definitions
+      At line 60 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CPUID_PARTNO_Msk unused
+SCB_CPUID_PARTNO_Pos 00000004
+
+Symbol: SCB_CPUID_PARTNO_Pos
+   Definitions
+      At line 59 in file core_cm3_constant.s
+   Uses
+      At line 60 in file core_cm3_constant.s
+Comment: SCB_CPUID_PARTNO_Pos used once
+SCB_CPUID_REVISION_Msk 0000000F
+
+Symbol: SCB_CPUID_REVISION_Msk
+   Definitions
+      At line 63 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CPUID_REVISION_Msk unused
+SCB_CPUID_REVISION_Pos 00000000
+
+Symbol: SCB_CPUID_REVISION_Pos
+
+
+
+ARM Macro Assembler    Page 26 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 62 in file core_cm3_constant.s
+   Uses
+      At line 63 in file core_cm3_constant.s
+Comment: SCB_CPUID_REVISION_Pos used once
+SCB_CPUID_VARIANT_Msk 00F00000
+
+Symbol: SCB_CPUID_VARIANT_Msk
+   Definitions
+      At line 57 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_CPUID_VARIANT_Msk unused
+SCB_CPUID_VARIANT_Pos 00000014
+
+Symbol: SCB_CPUID_VARIANT_Pos
+   Definitions
+      At line 56 in file core_cm3_constant.s
+   Uses
+      At line 57 in file core_cm3_constant.s
+Comment: SCB_CPUID_VARIANT_Pos used once
+SCB_DFSR_BKPT_Msk 00000002
+
+Symbol: SCB_DFSR_BKPT_Msk
+   Definitions
+      At line 228 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_DFSR_BKPT_Msk unused
+SCB_DFSR_BKPT_Pos 00000001
+
+Symbol: SCB_DFSR_BKPT_Pos
+   Definitions
+      At line 227 in file core_cm3_constant.s
+   Uses
+      At line 228 in file core_cm3_constant.s
+Comment: SCB_DFSR_BKPT_Pos used once
+SCB_DFSR_DWTTRAP_Msk 00000004
+
+Symbol: SCB_DFSR_DWTTRAP_Msk
+   Definitions
+      At line 225 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_DFSR_DWTTRAP_Msk unused
+SCB_DFSR_DWTTRAP_Pos 00000002
+
+Symbol: SCB_DFSR_DWTTRAP_Pos
+   Definitions
+      At line 224 in file core_cm3_constant.s
+   Uses
+      At line 225 in file core_cm3_constant.s
+Comment: SCB_DFSR_DWTTRAP_Pos used once
+SCB_DFSR_EXTERNAL_Msk 00000010
+
+Symbol: SCB_DFSR_EXTERNAL_Msk
+   Definitions
+      At line 219 in file core_cm3_constant.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 27 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: SCB_DFSR_EXTERNAL_Msk unused
+SCB_DFSR_EXTERNAL_Pos 00000004
+
+Symbol: SCB_DFSR_EXTERNAL_Pos
+   Definitions
+      At line 218 in file core_cm3_constant.s
+   Uses
+      At line 219 in file core_cm3_constant.s
+Comment: SCB_DFSR_EXTERNAL_Pos used once
+SCB_DFSR_HALTED_Msk 00000001
+
+Symbol: SCB_DFSR_HALTED_Msk
+   Definitions
+      At line 231 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_DFSR_HALTED_Msk unused
+SCB_DFSR_HALTED_Pos 00000000
+
+Symbol: SCB_DFSR_HALTED_Pos
+   Definitions
+      At line 230 in file core_cm3_constant.s
+   Uses
+      At line 231 in file core_cm3_constant.s
+Comment: SCB_DFSR_HALTED_Pos used once
+SCB_DFSR_VCATCH_Msk 00000008
+
+Symbol: SCB_DFSR_VCATCH_Msk
+   Definitions
+      At line 222 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_DFSR_VCATCH_Msk unused
+SCB_DFSR_VCATCH_Pos 00000003
+
+Symbol: SCB_DFSR_VCATCH_Pos
+   Definitions
+      At line 221 in file core_cm3_constant.s
+   Uses
+      At line 222 in file core_cm3_constant.s
+Comment: SCB_DFSR_VCATCH_Pos used once
+SCB_HFSR_DEBUGEVT_Msk 80000000
+
+Symbol: SCB_HFSR_DEBUGEVT_Msk
+   Definitions
+      At line 209 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_HFSR_DEBUGEVT_Msk unused
+SCB_HFSR_DEBUGEVT_Pos 0000001F
+
+Symbol: SCB_HFSR_DEBUGEVT_Pos
+   Definitions
+      At line 208 in file core_cm3_constant.s
+   Uses
+      At line 209 in file core_cm3_constant.s
+Comment: SCB_HFSR_DEBUGEVT_Pos used once
+SCB_HFSR_FORCED_Msk 40000000
+
+
+
+ARM Macro Assembler    Page 28 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: SCB_HFSR_FORCED_Msk
+   Definitions
+      At line 212 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_HFSR_FORCED_Msk unused
+SCB_HFSR_FORCED_Pos 0000001E
+
+Symbol: SCB_HFSR_FORCED_Pos
+   Definitions
+      At line 211 in file core_cm3_constant.s
+   Uses
+      At line 212 in file core_cm3_constant.s
+Comment: SCB_HFSR_FORCED_Pos used once
+SCB_HFSR_VECTTBL_Msk 00000002
+
+Symbol: SCB_HFSR_VECTTBL_Msk
+   Definitions
+      At line 215 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_HFSR_VECTTBL_Msk unused
+SCB_HFSR_VECTTBL_Pos 00000001
+
+Symbol: SCB_HFSR_VECTTBL_Pos
+   Definitions
+      At line 214 in file core_cm3_constant.s
+   Uses
+      At line 215 in file core_cm3_constant.s
+Comment: SCB_HFSR_VECTTBL_Pos used once
+SCB_ICSR_ISRPENDING_Msk 00400000
+
+Symbol: SCB_ICSR_ISRPENDING_Msk
+   Definitions
+      At line 85 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_ISRPENDING_Msk unused
+SCB_ICSR_ISRPENDING_Pos 00000016
+
+Symbol: SCB_ICSR_ISRPENDING_Pos
+   Definitions
+      At line 84 in file core_cm3_constant.s
+   Uses
+      At line 85 in file core_cm3_constant.s
+Comment: SCB_ICSR_ISRPENDING_Pos used once
+SCB_ICSR_ISRPREEMPT_Msk 00800000
+
+Symbol: SCB_ICSR_ISRPREEMPT_Msk
+   Definitions
+      At line 82 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_ISRPREEMPT_Msk unused
+SCB_ICSR_ISRPREEMPT_Pos 00000017
+
+Symbol: SCB_ICSR_ISRPREEMPT_Pos
+   Definitions
+
+
+
+ARM Macro Assembler    Page 29 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 81 in file core_cm3_constant.s
+   Uses
+      At line 82 in file core_cm3_constant.s
+Comment: SCB_ICSR_ISRPREEMPT_Pos used once
+SCB_ICSR_NMIPENDSET_Msk 80000000
+
+Symbol: SCB_ICSR_NMIPENDSET_Msk
+   Definitions
+      At line 67 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_NMIPENDSET_Msk unused
+SCB_ICSR_NMIPENDSET_Pos 0000001F
+
+Symbol: SCB_ICSR_NMIPENDSET_Pos
+   Definitions
+      At line 66 in file core_cm3_constant.s
+   Uses
+      At line 67 in file core_cm3_constant.s
+Comment: SCB_ICSR_NMIPENDSET_Pos used once
+SCB_ICSR_PENDSTCLR_Msk 02000000
+
+Symbol: SCB_ICSR_PENDSTCLR_Msk
+   Definitions
+      At line 79 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_PENDSTCLR_Msk unused
+SCB_ICSR_PENDSTCLR_Pos 00000019
+
+Symbol: SCB_ICSR_PENDSTCLR_Pos
+   Definitions
+      At line 78 in file core_cm3_constant.s
+   Uses
+      At line 79 in file core_cm3_constant.s
+Comment: SCB_ICSR_PENDSTCLR_Pos used once
+SCB_ICSR_PENDSTSET_Msk 04000000
+
+Symbol: SCB_ICSR_PENDSTSET_Msk
+   Definitions
+      At line 76 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_PENDSTSET_Msk unused
+SCB_ICSR_PENDSTSET_Pos 0000001A
+
+Symbol: SCB_ICSR_PENDSTSET_Pos
+   Definitions
+      At line 75 in file core_cm3_constant.s
+   Uses
+      At line 76 in file core_cm3_constant.s
+Comment: SCB_ICSR_PENDSTSET_Pos used once
+SCB_ICSR_PENDSVCLR_Msk 08000000
+
+Symbol: SCB_ICSR_PENDSVCLR_Msk
+   Definitions
+      At line 73 in file core_cm3_constant.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 30 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: SCB_ICSR_PENDSVCLR_Msk unused
+SCB_ICSR_PENDSVCLR_Pos 0000001B
+
+Symbol: SCB_ICSR_PENDSVCLR_Pos
+   Definitions
+      At line 72 in file core_cm3_constant.s
+   Uses
+      At line 73 in file core_cm3_constant.s
+Comment: SCB_ICSR_PENDSVCLR_Pos used once
+SCB_ICSR_PENDSVSET_Msk 10000000
+
+Symbol: SCB_ICSR_PENDSVSET_Msk
+   Definitions
+      At line 70 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_PENDSVSET_Msk unused
+SCB_ICSR_PENDSVSET_Pos 0000001C
+
+Symbol: SCB_ICSR_PENDSVSET_Pos
+   Definitions
+      At line 69 in file core_cm3_constant.s
+   Uses
+      At line 70 in file core_cm3_constant.s
+Comment: SCB_ICSR_PENDSVSET_Pos used once
+SCB_ICSR_RETTOBASE_Msk 00000800
+
+Symbol: SCB_ICSR_RETTOBASE_Msk
+   Definitions
+      At line 91 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_RETTOBASE_Msk unused
+SCB_ICSR_RETTOBASE_Pos 0000000B
+
+Symbol: SCB_ICSR_RETTOBASE_Pos
+   Definitions
+      At line 90 in file core_cm3_constant.s
+   Uses
+      At line 91 in file core_cm3_constant.s
+Comment: SCB_ICSR_RETTOBASE_Pos used once
+SCB_ICSR_VECTACTIVE_Msk 000001FF
+
+Symbol: SCB_ICSR_VECTACTIVE_Msk
+   Definitions
+      At line 94 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_VECTACTIVE_Msk unused
+SCB_ICSR_VECTACTIVE_Pos 00000000
+
+Symbol: SCB_ICSR_VECTACTIVE_Pos
+   Definitions
+      At line 93 in file core_cm3_constant.s
+   Uses
+      At line 94 in file core_cm3_constant.s
+Comment: SCB_ICSR_VECTACTIVE_Pos used once
+SCB_ICSR_VECTPENDING_Msk 001FF000
+
+
+
+
+ARM Macro Assembler    Page 31 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: SCB_ICSR_VECTPENDING_Msk
+   Definitions
+      At line 88 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_ICSR_VECTPENDING_Msk unused
+SCB_ICSR_VECTPENDING_Pos 0000000C
+
+Symbol: SCB_ICSR_VECTPENDING_Pos
+   Definitions
+      At line 87 in file core_cm3_constant.s
+   Uses
+      At line 88 in file core_cm3_constant.s
+Comment: SCB_ICSR_VECTPENDING_Pos used once
+SCB_SCR_SEVONPEND_Msk 00000010
+
+Symbol: SCB_SCR_SEVONPEND_Msk
+   Definitions
+      At line 127 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SCR_SEVONPEND_Msk unused
+SCB_SCR_SEVONPEND_Pos 00000004
+
+Symbol: SCB_SCR_SEVONPEND_Pos
+   Definitions
+      At line 126 in file core_cm3_constant.s
+   Uses
+      At line 127 in file core_cm3_constant.s
+Comment: SCB_SCR_SEVONPEND_Pos used once
+SCB_SCR_SLEEPDEEP_Msk 00000004
+
+Symbol: SCB_SCR_SLEEPDEEP_Msk
+   Definitions
+      At line 130 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SCR_SLEEPDEEP_Msk unused
+SCB_SCR_SLEEPDEEP_Pos 00000002
+
+Symbol: SCB_SCR_SLEEPDEEP_Pos
+   Definitions
+      At line 129 in file core_cm3_constant.s
+   Uses
+      At line 130 in file core_cm3_constant.s
+Comment: SCB_SCR_SLEEPDEEP_Pos used once
+SCB_SCR_SLEEPONEXIT_Msk 00000002
+
+Symbol: SCB_SCR_SLEEPONEXIT_Msk
+   Definitions
+      At line 133 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SCR_SLEEPONEXIT_Msk unused
+SCB_SCR_SLEEPONEXIT_Pos 00000001
+
+Symbol: SCB_SCR_SLEEPONEXIT_Pos
+   Definitions
+      At line 132 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 32 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      At line 133 in file core_cm3_constant.s
+Comment: SCB_SCR_SLEEPONEXIT_Pos used once
+SCB_SHCSR_BUSFAULTACT_Msk 00000002
+
+Symbol: SCB_SHCSR_BUSFAULTACT_Msk
+   Definitions
+      At line 192 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_BUSFAULTACT_Msk unused
+SCB_SHCSR_BUSFAULTACT_Pos 00000001
+
+Symbol: SCB_SHCSR_BUSFAULTACT_Pos
+   Definitions
+      At line 191 in file core_cm3_constant.s
+   Uses
+      At line 192 in file core_cm3_constant.s
+Comment: SCB_SHCSR_BUSFAULTACT_Pos used once
+SCB_SHCSR_BUSFAULTENA_Msk 00020000
+
+Symbol: SCB_SHCSR_BUSFAULTENA_Msk
+   Definitions
+      At line 159 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_BUSFAULTENA_Msk unused
+SCB_SHCSR_BUSFAULTENA_Pos 00000011
+
+Symbol: SCB_SHCSR_BUSFAULTENA_Pos
+   Definitions
+      At line 158 in file core_cm3_constant.s
+   Uses
+      At line 159 in file core_cm3_constant.s
+Comment: SCB_SHCSR_BUSFAULTENA_Pos used once
+SCB_SHCSR_BUSFAULTPENDED_Msk 00004000
+
+Symbol: SCB_SHCSR_BUSFAULTPENDED_Msk
+   Definitions
+      At line 168 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_BUSFAULTPENDED_Msk unused
+SCB_SHCSR_BUSFAULTPENDED_Pos 0000000E
+
+Symbol: SCB_SHCSR_BUSFAULTPENDED_Pos
+   Definitions
+      At line 167 in file core_cm3_constant.s
+   Uses
+      At line 168 in file core_cm3_constant.s
+Comment: SCB_SHCSR_BUSFAULTPENDED_Pos used once
+SCB_SHCSR_MEMFAULTACT_Msk 00000001
+
+Symbol: SCB_SHCSR_MEMFAULTACT_Msk
+   Definitions
+      At line 195 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_MEMFAULTACT_Msk unused
+
+
+
+ARM Macro Assembler    Page 33 Alphabetic symbol ordering
+Absolute symbols
+
+SCB_SHCSR_MEMFAULTACT_Pos 00000000
+
+Symbol: SCB_SHCSR_MEMFAULTACT_Pos
+   Definitions
+      At line 194 in file core_cm3_constant.s
+   Uses
+      At line 195 in file core_cm3_constant.s
+Comment: SCB_SHCSR_MEMFAULTACT_Pos used once
+SCB_SHCSR_MEMFAULTENA_Msk 00010000
+
+Symbol: SCB_SHCSR_MEMFAULTENA_Msk
+   Definitions
+      At line 162 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_MEMFAULTENA_Msk unused
+SCB_SHCSR_MEMFAULTENA_Pos 00000010
+
+Symbol: SCB_SHCSR_MEMFAULTENA_Pos
+   Definitions
+      At line 161 in file core_cm3_constant.s
+   Uses
+      At line 162 in file core_cm3_constant.s
+Comment: SCB_SHCSR_MEMFAULTENA_Pos used once
+SCB_SHCSR_MEMFAULTPENDED_Msk 00002000
+
+Symbol: SCB_SHCSR_MEMFAULTPENDED_Msk
+   Definitions
+      At line 171 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_MEMFAULTPENDED_Msk unused
+SCB_SHCSR_MEMFAULTPENDED_Pos 0000000D
+
+Symbol: SCB_SHCSR_MEMFAULTPENDED_Pos
+   Definitions
+      At line 170 in file core_cm3_constant.s
+   Uses
+      At line 171 in file core_cm3_constant.s
+Comment: SCB_SHCSR_MEMFAULTPENDED_Pos used once
+SCB_SHCSR_MONITORACT_Msk 00000100
+
+Symbol: SCB_SHCSR_MONITORACT_Msk
+   Definitions
+      At line 183 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_MONITORACT_Msk unused
+SCB_SHCSR_MONITORACT_Pos 00000008
+
+Symbol: SCB_SHCSR_MONITORACT_Pos
+   Definitions
+      At line 182 in file core_cm3_constant.s
+   Uses
+      At line 183 in file core_cm3_constant.s
+Comment: SCB_SHCSR_MONITORACT_Pos used once
+SCB_SHCSR_PENDSVACT_Msk 00000400
+
+Symbol: SCB_SHCSR_PENDSVACT_Msk
+
+
+
+ARM Macro Assembler    Page 34 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 180 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_PENDSVACT_Msk unused
+SCB_SHCSR_PENDSVACT_Pos 0000000A
+
+Symbol: SCB_SHCSR_PENDSVACT_Pos
+   Definitions
+      At line 179 in file core_cm3_constant.s
+   Uses
+      At line 180 in file core_cm3_constant.s
+Comment: SCB_SHCSR_PENDSVACT_Pos used once
+SCB_SHCSR_SVCALLACT_Msk 00000080
+
+Symbol: SCB_SHCSR_SVCALLACT_Msk
+   Definitions
+      At line 186 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_SVCALLACT_Msk unused
+SCB_SHCSR_SVCALLACT_Pos 00000007
+
+Symbol: SCB_SHCSR_SVCALLACT_Pos
+   Definitions
+      At line 185 in file core_cm3_constant.s
+   Uses
+      At line 186 in file core_cm3_constant.s
+Comment: SCB_SHCSR_SVCALLACT_Pos used once
+SCB_SHCSR_SVCALLPENDED_Msk 00008000
+
+Symbol: SCB_SHCSR_SVCALLPENDED_Msk
+   Definitions
+      At line 165 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_SVCALLPENDED_Msk unused
+SCB_SHCSR_SVCALLPENDED_Pos 0000000F
+
+Symbol: SCB_SHCSR_SVCALLPENDED_Pos
+   Definitions
+      At line 164 in file core_cm3_constant.s
+   Uses
+      At line 165 in file core_cm3_constant.s
+Comment: SCB_SHCSR_SVCALLPENDED_Pos used once
+SCB_SHCSR_SYSTICKACT_Msk 00000800
+
+Symbol: SCB_SHCSR_SYSTICKACT_Msk
+   Definitions
+      At line 177 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_SYSTICKACT_Msk unused
+SCB_SHCSR_SYSTICKACT_Pos 0000000B
+
+Symbol: SCB_SHCSR_SYSTICKACT_Pos
+   Definitions
+      At line 176 in file core_cm3_constant.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 35 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 177 in file core_cm3_constant.s
+Comment: SCB_SHCSR_SYSTICKACT_Pos used once
+SCB_SHCSR_USGFAULTACT_Msk 00000008
+
+Symbol: SCB_SHCSR_USGFAULTACT_Msk
+   Definitions
+      At line 189 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_USGFAULTACT_Msk unused
+SCB_SHCSR_USGFAULTACT_Pos 00000003
+
+Symbol: SCB_SHCSR_USGFAULTACT_Pos
+   Definitions
+      At line 188 in file core_cm3_constant.s
+   Uses
+      At line 189 in file core_cm3_constant.s
+Comment: SCB_SHCSR_USGFAULTACT_Pos used once
+SCB_SHCSR_USGFAULTENA_Msk 00040000
+
+Symbol: SCB_SHCSR_USGFAULTENA_Msk
+   Definitions
+      At line 156 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_USGFAULTENA_Msk unused
+SCB_SHCSR_USGFAULTENA_Pos 00000012
+
+Symbol: SCB_SHCSR_USGFAULTENA_Pos
+   Definitions
+      At line 155 in file core_cm3_constant.s
+   Uses
+      At line 156 in file core_cm3_constant.s
+Comment: SCB_SHCSR_USGFAULTENA_Pos used once
+SCB_SHCSR_USGFAULTPENDED_Msk 00001000
+
+Symbol: SCB_SHCSR_USGFAULTPENDED_Msk
+   Definitions
+      At line 174 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_SHCSR_USGFAULTPENDED_Msk unused
+SCB_SHCSR_USGFAULTPENDED_Pos 0000000C
+
+Symbol: SCB_SHCSR_USGFAULTPENDED_Pos
+   Definitions
+      At line 173 in file core_cm3_constant.s
+   Uses
+      At line 174 in file core_cm3_constant.s
+Comment: SCB_SHCSR_USGFAULTPENDED_Pos used once
+SCB_VTOR_TBLBASE_Msk E0000000
+
+Symbol: SCB_VTOR_TBLBASE_Msk
+   Definitions
+      At line 98 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_VTOR_TBLBASE_Msk unused
+SCB_VTOR_TBLBASE_Pos 0000001D
+
+
+
+ARM Macro Assembler    Page 36 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: SCB_VTOR_TBLBASE_Pos
+   Definitions
+      At line 97 in file core_cm3_constant.s
+   Uses
+      At line 98 in file core_cm3_constant.s
+Comment: SCB_VTOR_TBLBASE_Pos used once
+SCB_VTOR_TBLOFF_Msk 1FFFFF80
+
+Symbol: SCB_VTOR_TBLOFF_Msk
+   Definitions
+      At line 101 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SCB_VTOR_TBLOFF_Msk unused
+SCB_VTOR_TBLOFF_Pos 00000007
+
+Symbol: SCB_VTOR_TBLOFF_Pos
+   Definitions
+      At line 100 in file core_cm3_constant.s
+   Uses
+      At line 101 in file core_cm3_constant.s
+Comment: SCB_VTOR_TBLOFF_Pos used once
+SysTick_CALIB_NOREF_Msk 80000000
+
+Symbol: SysTick_CALIB_NOREF_Msk
+   Definitions
+      At line 264 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CALIB_NOREF_Msk unused
+SysTick_CALIB_NOREF_Pos 0000001F
+
+Symbol: SysTick_CALIB_NOREF_Pos
+   Definitions
+      At line 263 in file core_cm3_constant.s
+   Uses
+      At line 264 in file core_cm3_constant.s
+Comment: SysTick_CALIB_NOREF_Pos used once
+SysTick_CALIB_SKEW_Msk 40000000
+
+Symbol: SysTick_CALIB_SKEW_Msk
+   Definitions
+      At line 267 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CALIB_SKEW_Msk unused
+SysTick_CALIB_SKEW_Pos 0000001E
+
+Symbol: SysTick_CALIB_SKEW_Pos
+   Definitions
+      At line 266 in file core_cm3_constant.s
+   Uses
+      At line 267 in file core_cm3_constant.s
+Comment: SysTick_CALIB_SKEW_Pos used once
+SysTick_CALIB_TENMS_Msk 00FFFFFF
+
+Symbol: SysTick_CALIB_TENMS_Msk
+   Definitions
+
+
+
+ARM Macro Assembler    Page 37 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 270 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CALIB_TENMS_Msk unused
+SysTick_CALIB_TENMS_Pos 00000000
+
+Symbol: SysTick_CALIB_TENMS_Pos
+   Definitions
+      At line 269 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CALIB_TENMS_Pos unused
+SysTick_CTRL_CLKSOURCE_Msk 00000004
+
+Symbol: SysTick_CTRL_CLKSOURCE_Msk
+   Definitions
+      At line 246 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CTRL_CLKSOURCE_Msk unused
+SysTick_CTRL_CLKSOURCE_Pos 00000002
+
+Symbol: SysTick_CTRL_CLKSOURCE_Pos
+   Definitions
+      At line 245 in file core_cm3_constant.s
+   Uses
+      At line 246 in file core_cm3_constant.s
+Comment: SysTick_CTRL_CLKSOURCE_Pos used once
+SysTick_CTRL_COUNTFLAG_Msk 00010000
+
+Symbol: SysTick_CTRL_COUNTFLAG_Msk
+   Definitions
+      At line 243 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CTRL_COUNTFLAG_Msk unused
+SysTick_CTRL_COUNTFLAG_Pos 00000010
+
+Symbol: SysTick_CTRL_COUNTFLAG_Pos
+   Definitions
+      At line 242 in file core_cm3_constant.s
+   Uses
+      At line 243 in file core_cm3_constant.s
+Comment: SysTick_CTRL_COUNTFLAG_Pos used once
+SysTick_CTRL_ENABLE_Msk 00000001
+
+Symbol: SysTick_CTRL_ENABLE_Msk
+   Definitions
+      At line 252 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CTRL_ENABLE_Msk unused
+SysTick_CTRL_ENABLE_Pos 00000000
+
+Symbol: SysTick_CTRL_ENABLE_Pos
+   Definitions
+      At line 251 in file core_cm3_constant.s
+   Uses
+      At line 252 in file core_cm3_constant.s
+
+
+
+ARM Macro Assembler    Page 38 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: SysTick_CTRL_ENABLE_Pos used once
+SysTick_CTRL_TICKINT_Msk 00000002
+
+Symbol: SysTick_CTRL_TICKINT_Msk
+   Definitions
+      At line 249 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_CTRL_TICKINT_Msk unused
+SysTick_CTRL_TICKINT_Pos 00000001
+
+Symbol: SysTick_CTRL_TICKINT_Pos
+   Definitions
+      At line 248 in file core_cm3_constant.s
+   Uses
+      At line 249 in file core_cm3_constant.s
+Comment: SysTick_CTRL_TICKINT_Pos used once
+SysTick_LOAD_RELOAD_Msk 00FFFFFF
+
+Symbol: SysTick_LOAD_RELOAD_Msk
+   Definitions
+      At line 256 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_LOAD_RELOAD_Msk unused
+SysTick_LOAD_RELOAD_Pos 00000000
+
+Symbol: SysTick_LOAD_RELOAD_Pos
+   Definitions
+      At line 255 in file core_cm3_constant.s
+   Uses
+      At line 256 in file core_cm3_constant.s
+Comment: SysTick_LOAD_RELOAD_Pos used once
+SysTick_VAL_CURRENT_Msk 00FFFFFF
+
+Symbol: SysTick_VAL_CURRENT_Msk
+   Definitions
+      At line 260 in file core_cm3_constant.s
+   Uses
+      None
+Comment: SysTick_VAL_CURRENT_Msk unused
+SysTick_VAL_CURRENT_Pos 00000000
+
+Symbol: SysTick_VAL_CURRENT_Pos
+   Definitions
+      At line 259 in file core_cm3_constant.s
+   Uses
+      At line 260 in file core_cm3_constant.s
+      At line 270 in file core_cm3_constant.s
+
+279 symbols
+613 symbols in table
