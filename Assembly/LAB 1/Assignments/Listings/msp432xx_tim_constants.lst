@@ -1,0 +1,2311 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;******************** (C) Yifeng ZHU *******************
+                       ***********************************************
+    2 00000000         ; @file    stm32l1xx_tim_constants.s
+    3 00000000         ; @author  Yifeng Zhu @ UMaine
+    4 00000000         ; @version V1.0.0
+    5 00000000         ; @date    April-22-2012
+    6 00000000         ; @note    Modifed from stm32l1xx_tim.h (C) 2010 STMicro
+                       electronics
+    7 00000000         ; @brief   Assembly version of TIM firmware library
+    8 00000000         ; @note
+    9 00000000         ;          This code is for the book "Embedded Systems w
+                       ith ARM Cortex-M3 
+   10 00000000         ;          Microcontrollers in Assembly Language and C, 
+                       Yifeng Zhu, 
+   11 00000000         ;          ISBN-10: 0982692625.
+   12 00000000         ; @attension
+   13 00000000         ;          This code is provided for education purpose. 
+                       The author shall not be 
+   14 00000000         ;          held liable for any direct, indirect or conse
+                       quential damages, for any 
+   15 00000000         ;          reason whatever. More information can be foun
+                       d from book website: 
+   16 00000000         ;          http://www.eece.maine.edu/~zhu/book
+   17 00000000         ;*******************************************************
+                       ***********************************************
+   18 00000000         
+   19 00000000         
+   20 00000000         
+   21 00000000         
+   22 00000000         ; TIM Time Base Init structure definition
+   23 00000000         ; This structure is used with all TIMx except for TIM6 a
+                       nd TIM7.    
+   24 00000000         
+   25 00000000 00000000 
+                       TIM_TimeBase_Prescaler
+                               EQU              0x00        ; Specifies the pre
+                                                            scaler value used t
+                                                            o divide the TIM cl
+                                                            ock.
+   26 00000000         ; This parameter can be a number between 0x0000 and 0xFF
+                       FF 
+   27 00000000 00000002 
+                       TIM_TimeBase_CounterMode
+                               EQU              0x02        ; Specifies the cou
+                                                            nter mode.
+   28 00000000         ; This parameter can be a value of @ref TIM_Counter_Mode
+                        
+   29 00000000 00000004 
+                       TIM_TimeBase_Period
+                               EQU              0x04        ; Specifies the per
+                                                            iod value to be loa
+                                                            ded into the active
+                                                            
+   30 00000000         ; Auto-Reload Register at the next update event.
+   31 00000000         ; This parameter must be a number between 0x0000 and 0xF
+                       FFF.   
+   32 00000000 00000006 
+                       TIM_TimeBase_ClockDivision
+                               EQU              0x06        ; Specifies the clo
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            ck division.
+   33 00000000         ; This parameter can be a value of @ref TIM_Clock_Divisi
+                       on_CKD 
+   34 00000000         
+   35 00000000         
+   36 00000000         ; TIM Output Compare Init structure definition  
+   37 00000000 00000000 
+                       TIM_OC_OCMode
+                               EQU              0x00        ; Specifies the TIM
+                                                             mode.
+   38 00000000         ; This parameter can be a value of @ref TIM_Output_Compa
+                       re_and_PWM_modes 
+   39 00000000 00000002 
+                       TIM_OC_OutputState
+                               EQU              0x02        ; Specifies the TIM
+                                                             Output Compare sta
+                                                            te.
+   40 00000000         ; This parameter can be a value of @ref TIM_Output_Compa
+                       re_state 
+   41 00000000 00000004 
+                       TIM_OC_Pulse
+                               EQU              0x04        ; Specifies the pul
+                                                            se value to be load
+                                                            ed into the Capture
+                                                             Compare Register. 
+                                                            
+   42 00000000         ; This parameter can be a number between 0x0000 and 0xFF
+                       FF 
+   43 00000000 00000006 
+                       TIM_OC_OCPolarity
+                               EQU              0x06        ; Specifies the out
+                                                            put polarity.
+   44 00000000         ; This parameter can be a value of @ref TIM_Output_Compa
+                       re_Polarity 
+   45 00000000         
+   46 00000000         
+   47 00000000         ; TIM Input Capture Init structure definition  
+   48 00000000 00000000 
+                       TIM_IC_Channel
+                               EQU              0x00        ; Specifies the TIM
+                                                             channel.
+   49 00000000         ; This parameter can be a value of @ref TIM_Channel 
+   50 00000000 00000002 
+                       TIM_IC_ICPolarity
+                               EQU              0x02        ; Specifies the act
+                                                            ive edge of the inp
+                                                            ut signal.
+   51 00000000         ; This parameter can be a value of @ref TIM_Input_Captur
+                       e_Polarity 
+   52 00000000 00000004 
+                       TIM_IC_ICSelection
+                               EQU              0x04        ; Specifies the inp
+                                                            ut.
+   53 00000000         ; This parameter can be a value of @ref TIM_Input_Captur
+                       e_Selection 
+   54 00000000 00000006 
+                       TIM_IC_ICPrescaler
+                               EQU              0x06        ; Specifies the Inp
+                                                            ut Capture Prescale
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+                                                            r.
+   55 00000000         ; This parameter can be a value of @ref TIM_Input_Captur
+                       e_Prescaler 
+   56 00000000 00000008 
+                       TIM_IC_ICFilte
+                               EQU              0x08        ; Specifies the inp
+                                                            ut capture filter.
+   57 00000000         ; This parameter can be a number between 0x0 and 0xF 
+   58 00000000         
+   59 00000000         ; TIM_Output_Compare_and_PWM_modes 
+   60 00000000 00000000 
+                       TIM_OCMode_Timing
+                               EQU              (0x0000)
+   61 00000000 00000010 
+                       TIM_OCMode_Active
+                               EQU              (0x0010)
+   62 00000000 00000020 
+                       TIM_OCMode_Inactive
+                               EQU              (0x0020)
+   63 00000000 00000030 
+                       TIM_OCMode_Toggle
+                               EQU              (0x0030)
+   64 00000000 00000060 
+                       TIM_OCMode_PWM1
+                               EQU              (0x0060)
+   65 00000000 00000070 
+                       TIM_OCMode_PWM2
+                               EQU              (0x0070)
+   66 00000000         
+   67 00000000         
+   68 00000000         ; TIM_One_Pulse_Mode 
+   69 00000000 00000008 
+                       TIM_OPMode_Single
+                               EQU              (0x0008)
+   70 00000000 00000000 
+                       TIM_OPMode_Repetitive
+                               EQU              (0x0000)
+   71 00000000         
+   72 00000000         
+   73 00000000         ; TIM_Channel 
+   74 00000000 00000000 
+                       TIM_Channel_1
+                               EQU              (0x0000)
+   75 00000000 00000004 
+                       TIM_Channel_2
+                               EQU              (0x0004)
+   76 00000000 00000008 
+                       TIM_Channel_3
+                               EQU              (0x0008)
+   77 00000000 0000000C 
+                       TIM_Channel_4
+                               EQU              (0x000C)
+   78 00000000         
+   79 00000000         
+   80 00000000         ; TIM_Clock_Division_CKD 
+   81 00000000 00000000 
+                       TIM_CKD_DIV1
+                               EQU              (0x0000)
+   82 00000000 00000100 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+                       TIM_CKD_DIV2
+                               EQU              (0x0100)
+   83 00000000 00000200 
+                       TIM_CKD_DIV4
+                               EQU              (0x0200)
+   84 00000000         
+   85 00000000         ; TIM_Counter_Mode 
+   86 00000000 00000000 
+                       TIM_CounterMode_Up
+                               EQU              (0x0000)
+   87 00000000 00000010 
+                       TIM_CounterMode_Down
+                               EQU              (0x0010)
+   88 00000000 00000020 
+                       TIM_CounterMode_CenterAligned1
+                               EQU              (0x0020)
+   89 00000000 00000040 
+                       TIM_CounterMode_CenterAligned2
+                               EQU              (0x0040)
+   90 00000000 00000060 
+                       TIM_CounterMode_CenterAligned3
+                               EQU              (0x0060)
+   91 00000000         
+   92 00000000         
+   93 00000000         ; TIM_Output_Compare_Polarity 
+   94 00000000 00000000 
+                       TIM_OCPolarity_High
+                               EQU              (0x0000)
+   95 00000000 00000002 
+                       TIM_OCPolarity_Low
+                               EQU              (0x0002)
+   96 00000000         
+   97 00000000         ; TIM_Output_Compare_state
+   98 00000000 00000000 
+                       TIM_OutputState_Disable
+                               EQU              (0x0000)
+   99 00000000 00000001 
+                       TIM_OutputState_Enable
+                               EQU              (0x0001)
+  100 00000000         
+  101 00000000         ; TIM_Capture_Compare_state 
+  102 00000000 00000001 
+                       TIM_CCx_Enable
+                               EQU              (0x0001)
+  103 00000000 00000000 
+                       TIM_CCx_Disable
+                               EQU              (0x0000)
+  104 00000000         
+  105 00000000         ; TIM_Input_Capture_Polarity 
+  106 00000000 00000000 
+                       TIM_ICPolarity_Rising
+                               EQU              (0x0000)
+  107 00000000 00000002 
+                       TIM_ICPolarity_Falling
+                               EQU              (0x0002)
+  108 00000000 0000000A 
+                       TIM_ICPolarity_BothEdge
+                               EQU              (0x000A)
+  109 00000000         
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  110 00000000         
+  111 00000000         ; TIM_Input_Capture_Selection 
+  112 00000000 00000001 
+                       TIM_ICSelection_DirectTI
+                               EQU              (0x0001)    ; TIM Input 1, 2, 3
+                                                             or 4 is selected t
+                                                            o be 
+  113 00000000         ;   connected to IC1, IC2, IC3 or IC4, respectively 
+  114 00000000 00000002 
+                       TIM_ICSelection_IndirectTI
+                               EQU              (0x0002)    ; TIM Input 1, 2, 3
+                                                             or 4 is selected t
+                                                            o be
+  115 00000000         ;   connected to IC2, IC1, IC4 or IC3, respectively. 
+  116 00000000 00000003 
+                       TIM_ICSelection_TRC
+                               EQU              (0x0003)    ; TIM Input 1, 2, 3
+                                                             or 4 is selected t
+                                                            o be connected to T
+                                                            RC. 
+  117 00000000         
+  118 00000000         ; TIM_Input_Capture_Prescaler 
+  119 00000000 00000000 
+                       TIM_ICPSC_DIV1
+                               EQU              (0x0000)    ; Capture performed
+                                                             each time an edge 
+                                                            is detected on the 
+                                                            capture input. 
+  120 00000000 00000004 
+                       TIM_ICPSC_DIV2
+                               EQU              (0x0004)    ; Capture performed
+                                                             once every 2 event
+                                                            s. 
+  121 00000000 00000008 
+                       TIM_ICPSC_DIV4
+                               EQU              (0x0008)    ; Capture performed
+                                                             once every 4 event
+                                                            s. 
+  122 00000000 0000000C 
+                       TIM_ICPSC_DIV8
+                               EQU              (0x000C)    ; Capture performed
+                                                             once every 8 event
+                                                            s. 
+  123 00000000         
+  124 00000000         
+  125 00000000         ; TIM_interrupt_sources 
+  126 00000000 00000001 
+                       TIM_IT_Update
+                               EQU              (0x0001)
+  127 00000000 00000002 
+                       TIM_IT_CC1
+                               EQU              (0x0002)
+  128 00000000 00000004 
+                       TIM_IT_CC2
+                               EQU              (0x0004)
+  129 00000000 00000008 
+                       TIM_IT_CC3
+                               EQU              (0x0008)
+  130 00000000 00000010 
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+                       TIM_IT_CC4
+                               EQU              (0x0010)
+  131 00000000 00000040 
+                       TIM_IT_Trigger
+                               EQU              (0x0040)
+  132 00000000         
+  133 00000000         ; TIM_DMA_Base_address 
+  134 00000000 00000000 
+                       TIM_DMABase_CR1
+                               EQU              (0x0000)
+  135 00000000 00000001 
+                       TIM_DMABase_CR2
+                               EQU              (0x0001)
+  136 00000000 00000002 
+                       TIM_DMABase_SMCR
+                               EQU              (0x0002)
+  137 00000000 00000003 
+                       TIM_DMABase_DIER
+                               EQU              (0x0003)
+  138 00000000 00000004 
+                       TIM_DMABase_SR
+                               EQU              (0x0004)
+  139 00000000 00000005 
+                       TIM_DMABase_EGR
+                               EQU              (0x0005)
+  140 00000000 00000006 
+                       TIM_DMABase_CCMR1
+                               EQU              (0x0006)
+  141 00000000 00000007 
+                       TIM_DMABase_CCMR2
+                               EQU              (0x0007)
+  142 00000000 00000008 
+                       TIM_DMABase_CCER
+                               EQU              (0x0008)
+  143 00000000 00000009 
+                       TIM_DMABase_CNT
+                               EQU              (0x0009)
+  144 00000000 0000000A 
+                       TIM_DMABase_PSC
+                               EQU              (0x000A)
+  145 00000000 0000000B 
+                       TIM_DMABase_ARR
+                               EQU              (0x000B)
+  146 00000000 0000000C 
+                       TIM_DMABase_RCR
+                               EQU              (0x000C)
+  147 00000000 0000000D 
+                       TIM_DMABase_CCR1
+                               EQU              (0x000D)
+  148 00000000 0000000E 
+                       TIM_DMABase_CCR2
+                               EQU              (0x000E)
+  149 00000000 0000000F 
+                       TIM_DMABase_CCR3
+                               EQU              (0x000F)
+  150 00000000 00000010 
+                       TIM_DMABase_CCR4
+                               EQU              (0x0010)
+  151 00000000 00000012 
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+                       TIM_DMABase_DCR
+                               EQU              (0x0012)
+  152 00000000         
+  153 00000000         ; TIM_DMA_Burst_Length 
+  154 00000000 00000000 
+                       TIM_DMABurstLength_1Byte
+                               EQU              (0x0000)
+  155 00000000 00000100 
+                       TIM_DMABurstLength_2Bytes
+                               EQU              (0x0100)
+  156 00000000 00000200 
+                       TIM_DMABurstLength_3Bytes
+                               EQU              (0x0200)
+  157 00000000 00000300 
+                       TIM_DMABurstLength_4Bytes
+                               EQU              (0x0300)
+  158 00000000 00000400 
+                       TIM_DMABurstLength_5Bytes
+                               EQU              (0x0400)
+  159 00000000 00000500 
+                       TIM_DMABurstLength_6Bytes
+                               EQU              (0x0500)
+  160 00000000 00000600 
+                       TIM_DMABurstLength_7Bytes
+                               EQU              (0x0600)
+  161 00000000 00000700 
+                       TIM_DMABurstLength_8Bytes
+                               EQU              (0x0700)
+  162 00000000 00000800 
+                       TIM_DMABurstLength_9Bytes
+                               EQU              (0x0800)
+  163 00000000 00000900 
+                       TIM_DMABurstLength_10Bytes
+                               EQU              (0x0900)
+  164 00000000 00000A00 
+                       TIM_DMABurstLength_11Bytes
+                               EQU              (0x0A00)
+  165 00000000 00000B00 
+                       TIM_DMABurstLength_12Bytes
+                               EQU              (0x0B00)
+  166 00000000 00000C00 
+                       TIM_DMABurstLength_13Bytes
+                               EQU              (0x0C00)
+  167 00000000 00000D00 
+                       TIM_DMABurstLength_14Bytes
+                               EQU              (0x0D00)
+  168 00000000 00000E00 
+                       TIM_DMABurstLength_15Bytes
+                               EQU              (0x0E00)
+  169 00000000 00000F00 
+                       TIM_DMABurstLength_16Bytes
+                               EQU              (0x0F00)
+  170 00000000 00001000 
+                       TIM_DMABurstLength_17Bytes
+                               EQU              (0x1000)
+  171 00000000 00001100 
+                       TIM_DMABurstLength_18Bytes
+                               EQU              (0x1100)
+  172 00000000         
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+  173 00000000         ; TIM_DMA_sources 
+  174 00000000 00000100 
+                       TIM_DMA_Update
+                               EQU              (0x0100)
+  175 00000000 00000200 
+                       TIM_DMA_CC1
+                               EQU              (0x0200)
+  176 00000000 00000400 
+                       TIM_DMA_CC2
+                               EQU              (0x0400)
+  177 00000000 00000800 
+                       TIM_DMA_CC3
+                               EQU              (0x0800)
+  178 00000000 00001000 
+                       TIM_DMA_CC4
+                               EQU              (0x1000)
+  179 00000000 00004000 
+                       TIM_DMA_Trigger
+                               EQU              (0x4000)
+  180 00000000         
+  181 00000000         ; TIM_External_Trigger_Prescaler 
+  182 00000000 00000000 
+                       TIM_ExtTRGPSC_OFF
+                               EQU              (0x0000)
+  183 00000000 00001000 
+                       TIM_ExtTRGPSC_DIV2
+                               EQU              (0x1000)
+  184 00000000 00002000 
+                       TIM_ExtTRGPSC_DIV4
+                               EQU              (0x2000)
+  185 00000000 00003000 
+                       TIM_ExtTRGPSC_DIV8
+                               EQU              (0x3000)
+  186 00000000         
+  187 00000000         ; TIM_Internal_Trigger_Selection 
+  188 00000000 00000000 
+                       TIM_TS_ITR0
+                               EQU              (0x0000)
+  189 00000000 00000010 
+                       TIM_TS_ITR1
+                               EQU              (0x0010)
+  190 00000000 00000020 
+                       TIM_TS_ITR2
+                               EQU              (0x0020)
+  191 00000000 00000030 
+                       TIM_TS_ITR3
+                               EQU              (0x0030)
+  192 00000000 00000040 
+                       TIM_TS_TI1F_ED
+                               EQU              (0x0040)
+  193 00000000 00000050 
+                       TIM_TS_TI1FP1
+                               EQU              (0x0050)
+  194 00000000 00000060 
+                       TIM_TS_TI2FP2
+                               EQU              (0x0060)
+  195 00000000 00000070 
+                       TIM_TS_ETRF
+                               EQU              (0x0070)
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+  196 00000000         
+  197 00000000         ; TIM_TIx_External_Clock_Source 
+  198 00000000 00000050 
+                       TIM_TIxExternalCLK1Source_TI1
+                               EQU              (0x0050)
+  199 00000000 00000060 
+                       TIM_TIxExternalCLK1Source_TI2
+                               EQU              (0x0060)
+  200 00000000 00000040 
+                       TIM_TIxExternalCLK1Source_TI1ED
+                               EQU              (0x0040)
+  201 00000000         
+  202 00000000         
+  203 00000000         ; TIM_External_Trigger_Polarity 
+  204 00000000 00008000 
+                       TIM_ExtTRGPolarity_Inverted
+                               EQU              (0x8000)
+  205 00000000 00000000 
+                       TIM_ExtTRGPolarity_NonInverted
+                               EQU              (0x0000)
+  206 00000000         
+  207 00000000         ; TIM_Prescaler_Reload_Mode 
+  208 00000000 00000000 
+                       TIM_PSCReloadMode_Update
+                               EQU              (0x0000)
+  209 00000000 00000001 
+                       TIM_PSCReloadMode_Immediate
+                               EQU              (0x0001)
+  210 00000000         
+  211 00000000         ; TIM_Forced_Action 
+  212 00000000 00000050 
+                       TIM_ForcedAction_Active
+                               EQU              (0x0050)
+  213 00000000 00000040 
+                       TIM_ForcedAction_InActive
+                               EQU              (0x0040)
+  214 00000000         
+  215 00000000         ; TIM_Encoder_Mode 
+  216 00000000 00000001 
+                       TIM_EncoderMode_TI1
+                               EQU              (0x0001)
+  217 00000000 00000002 
+                       TIM_EncoderMode_TI2
+                               EQU              (0x0002)
+  218 00000000 00000003 
+                       TIM_EncoderMode_TI12
+                               EQU              (0x0003)
+  219 00000000         
+  220 00000000         ; TIM_Event_Source 
+  221 00000000 00000001 
+                       TIM_EventSource_Update
+                               EQU              (0x0001)
+  222 00000000 00000002 
+                       TIM_EventSource_CC1
+                               EQU              (0x0002)
+  223 00000000 00000004 
+                       TIM_EventSource_CC2
+                               EQU              (0x0004)
+  224 00000000 00000008 
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+                       TIM_EventSource_CC3
+                               EQU              (0x0008)
+  225 00000000 00000010 
+                       TIM_EventSource_CC4
+                               EQU              (0x0010)
+  226 00000000 00000040 
+                       TIM_EventSource_Trigger
+                               EQU              (0x0040)
+  227 00000000         
+  228 00000000         ; TIM_Update_Source 
+  229 00000000 00000000 
+                       TIM_UpdateSource_Global
+                               EQU              (0x0000)    ; Source of update 
+                                                            is the counter over
+                                                            flow/underflow
+  230 00000000         ; or the setting of UG bit, or an update generation
+  231 00000000         ; through the slave mode controller. 
+  232 00000000 00000001 
+                       TIM_UpdateSource_Regular
+                               EQU              (0x0001)    ; Source of update 
+                                                            is counter overflow
+                                                            /underflow. 
+  233 00000000         
+  234 00000000         ; TIM_Output_Compare_Preload_State 
+  235 00000000 00000008 
+                       TIM_OCPreload_Enable
+                               EQU              (0x0008)
+  236 00000000 00000000 
+                       TIM_OCPreload_Disable
+                               EQU              (0x0000)
+  237 00000000         
+  238 00000000         ; TIM_Output_Compare_Fast_State 
+  239 00000000 00000004 
+                       TIM_OCFast_Enable
+                               EQU              (0x0004)
+  240 00000000 00000000 
+                       TIM_OCFast_Disable
+                               EQU              (0x0000)
+  241 00000000         
+  242 00000000         ; TIM_Output_Compare_Clear_State 
+  243 00000000 00000080 
+                       TIM_OCClear_Enable
+                               EQU              (0x0080)
+  244 00000000 00000000 
+                       TIM_OCClear_Disable
+                               EQU              (0x0000)
+  245 00000000         
+  246 00000000         ; TIM_Trigger_Output_Source 
+  247 00000000 00000000 
+                       TIM_TRGOSource_Reset
+                               EQU              (0x0000)
+  248 00000000 00000010 
+                       TIM_TRGOSource_Enable
+                               EQU              (0x0010)
+  249 00000000 00000020 
+                       TIM_TRGOSource_Update
+                               EQU              (0x0020)
+  250 00000000 00000030 
+                       TIM_TRGOSource_OC1
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+                               EQU              (0x0030)
+  251 00000000 00000040 
+                       TIM_TRGOSource_OC1Ref
+                               EQU              (0x0040)
+  252 00000000 00000050 
+                       TIM_TRGOSource_OC2Ref
+                               EQU              (0x0050)
+  253 00000000 00000060 
+                       TIM_TRGOSource_OC3Ref
+                               EQU              (0x0060)
+  254 00000000 00000070 
+                       TIM_TRGOSource_OC4Ref
+                               EQU              (0x0070)
+  255 00000000         
+  256 00000000         ; TIM_Slave_Mode 
+  257 00000000 00000004 
+                       TIM_SlaveMode_Reset
+                               EQU              (0x0004)
+  258 00000000 00000005 
+                       TIM_SlaveMode_Gated
+                               EQU              (0x0005)
+  259 00000000 00000006 
+                       TIM_SlaveMode_Trigger
+                               EQU              (0x0006)
+  260 00000000 00000007 
+                       TIM_SlaveMode_External1
+                               EQU              (0x0007)
+  261 00000000         
+  262 00000000         ; TIM_Master_Slave_Mode 
+  263 00000000 00000080 
+                       TIM_MasterSlaveMode_Enable
+                               EQU              (0x0080)
+  264 00000000 00000000 
+                       TIM_MasterSlaveMode_Disable
+                               EQU              (0x0000)
+  265 00000000         
+  266 00000000         ; TIM_Flags 
+  267 00000000 00000001 
+                       TIM_FLAG_Update
+                               EQU              (0x0001)
+  268 00000000 00000002 
+                       TIM_FLAG_CC1
+                               EQU              (0x0002)
+  269 00000000 00000004 
+                       TIM_FLAG_CC2
+                               EQU              (0x0004)
+  270 00000000 00000008 
+                       TIM_FLAG_CC3
+                               EQU              (0x0008)
+  271 00000000 00000010 
+                       TIM_FLAG_CC4
+                               EQU              (0x0010)
+  272 00000000 00000040 
+                       TIM_FLAG_Trigger
+                               EQU              (0x0040)
+  273 00000000 00000200 
+                       TIM_FLAG_CC1OF
+                               EQU              (0x0200)
+  274 00000000 00000400 
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+                       TIM_FLAG_CC2OF
+                               EQU              (0x0400)
+  275 00000000 00000800 
+                       TIM_FLAG_CC3OF
+                               EQU              (0x0800)
+  276 00000000 00001000 
+                       TIM_FLAG_CC4OF
+                               EQU              (0x1000)
+  277 00000000         
+  278 00000000         
+  279 00000000         ; TIM_OCReferenceClear 
+  280 00000000 00000008 
+                       TIM_OCReferenceClear_ETRF
+                               EQU              (0x0008)
+  281 00000000 00000000 
+                       TIM_OCReferenceClear_OCREFCLR
+                               EQU              (0x0000)
+  282 00000000         
+  283 00000000         ; TIM_Remap 
+  284 00000000 00000000 
+                       TIM9_GPIO
+                               EQU              (0x0000)
+  285 00000000 00000001 
+                       TIM9_LSE
+                               EQU              (0x0001)
+  286 00000000         
+  287 00000000 00000000 
+                       TIM10_GPIO
+                               EQU              (0x0000)
+  288 00000000 00000001 
+                       TIM10_LSI
+                               EQU              (0x0001)
+  289 00000000 00000002 
+                       TIM10_LSE
+                               EQU              (0x0002)
+  290 00000000 00000003 
+                       TIM10_RTC
+                               EQU              (0x0003)
+  291 00000000         
+  292 00000000 00000000 
+                       TIM11_GPIO
+                               EQU              (0x0000)
+  293 00000000 00000001 
+                       TIM11_MSI
+                               EQU              (0x0001)
+  294 00000000 00000002 
+                       TIM11_HSE_RTC
+                               EQU              (0x0002)
+  295 00000000         
+  296 00000000         
+  297 00000000         ; This following is added to remove the compiler warning
+                       .
+  298 00000000                 AREA             __DEFINES_STM32L1xx_TIM_DUMMY, 
+CODE, READONLY
+  299 00000000                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\msp432xx_tim_constants.d -o.\objects\msp432xx_tim_con
+stants.o -I.\RTE\_Target_1 -IC:\Users\user\AppData\Local\Arm\Packs\ARM\CMSIS\5.
+5.1\CMSIS\Core\Include -IC:\Users\user\AppData\Local\Arm\Packs\TexasInstruments
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+\MSP432P4xx_DFP\3.2.6\Device\Include --predefine="__EVAL SETA 1" --predefine="_
+_UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --predefine="__MSP432P401
+R__ SETA 1" --list=.\listings\msp432xx_tim_constants.lst MSP432xx_tim_constants
+.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+__DEFINES_STM32L1xx_TIM_DUMMY 00000000
+
+Symbol: __DEFINES_STM32L1xx_TIM_DUMMY
+   Definitions
+      At line 298 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: __DEFINES_STM32L1xx_TIM_DUMMY unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+TIM10_GPIO 00000000
+
+Symbol: TIM10_GPIO
+   Definitions
+      At line 287 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM10_GPIO unused
+TIM10_LSE 00000002
+
+Symbol: TIM10_LSE
+   Definitions
+      At line 289 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM10_LSE unused
+TIM10_LSI 00000001
+
+Symbol: TIM10_LSI
+   Definitions
+      At line 288 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM10_LSI unused
+TIM10_RTC 00000003
+
+Symbol: TIM10_RTC
+   Definitions
+      At line 290 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM10_RTC unused
+TIM11_GPIO 00000000
+
+Symbol: TIM11_GPIO
+   Definitions
+      At line 292 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM11_GPIO unused
+TIM11_HSE_RTC 00000002
+
+Symbol: TIM11_HSE_RTC
+   Definitions
+      At line 294 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM11_HSE_RTC unused
+TIM11_MSI 00000001
+
+Symbol: TIM11_MSI
+   Definitions
+      At line 293 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM11_MSI unused
+TIM9_GPIO 00000000
+
+Symbol: TIM9_GPIO
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 284 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM9_GPIO unused
+TIM9_LSE 00000001
+
+Symbol: TIM9_LSE
+   Definitions
+      At line 285 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM9_LSE unused
+TIM_CCx_Disable 00000000
+
+Symbol: TIM_CCx_Disable
+   Definitions
+      At line 103 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CCx_Disable unused
+TIM_CCx_Enable 00000001
+
+Symbol: TIM_CCx_Enable
+   Definitions
+      At line 102 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CCx_Enable unused
+TIM_CKD_DIV1 00000000
+
+Symbol: TIM_CKD_DIV1
+   Definitions
+      At line 81 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CKD_DIV1 unused
+TIM_CKD_DIV2 00000100
+
+Symbol: TIM_CKD_DIV2
+   Definitions
+      At line 82 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CKD_DIV2 unused
+TIM_CKD_DIV4 00000200
+
+Symbol: TIM_CKD_DIV4
+   Definitions
+      At line 83 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CKD_DIV4 unused
+TIM_Channel_1 00000000
+
+Symbol: TIM_Channel_1
+   Definitions
+      At line 74 in file MSP432xx_tim_constants.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: TIM_Channel_1 unused
+TIM_Channel_2 00000004
+
+Symbol: TIM_Channel_2
+   Definitions
+      At line 75 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_Channel_2 unused
+TIM_Channel_3 00000008
+
+Symbol: TIM_Channel_3
+   Definitions
+      At line 76 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_Channel_3 unused
+TIM_Channel_4 0000000C
+
+Symbol: TIM_Channel_4
+   Definitions
+      At line 77 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_Channel_4 unused
+TIM_CounterMode_CenterAligned1 00000020
+
+Symbol: TIM_CounterMode_CenterAligned1
+   Definitions
+      At line 88 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CounterMode_CenterAligned1 unused
+TIM_CounterMode_CenterAligned2 00000040
+
+Symbol: TIM_CounterMode_CenterAligned2
+   Definitions
+      At line 89 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CounterMode_CenterAligned2 unused
+TIM_CounterMode_CenterAligned3 00000060
+
+Symbol: TIM_CounterMode_CenterAligned3
+   Definitions
+      At line 90 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CounterMode_CenterAligned3 unused
+TIM_CounterMode_Down 00000010
+
+Symbol: TIM_CounterMode_Down
+   Definitions
+      At line 87 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CounterMode_Down unused
+TIM_CounterMode_Up 00000000
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: TIM_CounterMode_Up
+   Definitions
+      At line 86 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_CounterMode_Up unused
+TIM_DMABase_ARR 0000000B
+
+Symbol: TIM_DMABase_ARR
+   Definitions
+      At line 145 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_ARR unused
+TIM_DMABase_CCER 00000008
+
+Symbol: TIM_DMABase_CCER
+   Definitions
+      At line 142 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCER unused
+TIM_DMABase_CCMR1 00000006
+
+Symbol: TIM_DMABase_CCMR1
+   Definitions
+      At line 140 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCMR1 unused
+TIM_DMABase_CCMR2 00000007
+
+Symbol: TIM_DMABase_CCMR2
+   Definitions
+      At line 141 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCMR2 unused
+TIM_DMABase_CCR1 0000000D
+
+Symbol: TIM_DMABase_CCR1
+   Definitions
+      At line 147 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCR1 unused
+TIM_DMABase_CCR2 0000000E
+
+Symbol: TIM_DMABase_CCR2
+   Definitions
+      At line 148 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCR2 unused
+TIM_DMABase_CCR3 0000000F
+
+Symbol: TIM_DMABase_CCR3
+   Definitions
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 149 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCR3 unused
+TIM_DMABase_CCR4 00000010
+
+Symbol: TIM_DMABase_CCR4
+   Definitions
+      At line 150 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CCR4 unused
+TIM_DMABase_CNT 00000009
+
+Symbol: TIM_DMABase_CNT
+   Definitions
+      At line 143 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CNT unused
+TIM_DMABase_CR1 00000000
+
+Symbol: TIM_DMABase_CR1
+   Definitions
+      At line 134 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CR1 unused
+TIM_DMABase_CR2 00000001
+
+Symbol: TIM_DMABase_CR2
+   Definitions
+      At line 135 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_CR2 unused
+TIM_DMABase_DCR 00000012
+
+Symbol: TIM_DMABase_DCR
+   Definitions
+      At line 151 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_DCR unused
+TIM_DMABase_DIER 00000003
+
+Symbol: TIM_DMABase_DIER
+   Definitions
+      At line 137 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_DIER unused
+TIM_DMABase_EGR 00000005
+
+Symbol: TIM_DMABase_EGR
+   Definitions
+      At line 139 in file MSP432xx_tim_constants.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: TIM_DMABase_EGR unused
+TIM_DMABase_PSC 0000000A
+
+Symbol: TIM_DMABase_PSC
+   Definitions
+      At line 144 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_PSC unused
+TIM_DMABase_RCR 0000000C
+
+Symbol: TIM_DMABase_RCR
+   Definitions
+      At line 146 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_RCR unused
+TIM_DMABase_SMCR 00000002
+
+Symbol: TIM_DMABase_SMCR
+   Definitions
+      At line 136 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_SMCR unused
+TIM_DMABase_SR 00000004
+
+Symbol: TIM_DMABase_SR
+   Definitions
+      At line 138 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABase_SR unused
+TIM_DMABurstLength_10Bytes 00000900
+
+Symbol: TIM_DMABurstLength_10Bytes
+   Definitions
+      At line 163 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_10Bytes unused
+TIM_DMABurstLength_11Bytes 00000A00
+
+Symbol: TIM_DMABurstLength_11Bytes
+   Definitions
+      At line 164 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_11Bytes unused
+TIM_DMABurstLength_12Bytes 00000B00
+
+Symbol: TIM_DMABurstLength_12Bytes
+   Definitions
+      At line 165 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_12Bytes unused
+TIM_DMABurstLength_13Bytes 00000C00
+
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: TIM_DMABurstLength_13Bytes
+   Definitions
+      At line 166 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_13Bytes unused
+TIM_DMABurstLength_14Bytes 00000D00
+
+Symbol: TIM_DMABurstLength_14Bytes
+   Definitions
+      At line 167 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_14Bytes unused
+TIM_DMABurstLength_15Bytes 00000E00
+
+Symbol: TIM_DMABurstLength_15Bytes
+   Definitions
+      At line 168 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_15Bytes unused
+TIM_DMABurstLength_16Bytes 00000F00
+
+Symbol: TIM_DMABurstLength_16Bytes
+   Definitions
+      At line 169 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_16Bytes unused
+TIM_DMABurstLength_17Bytes 00001000
+
+Symbol: TIM_DMABurstLength_17Bytes
+   Definitions
+      At line 170 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_17Bytes unused
+TIM_DMABurstLength_18Bytes 00001100
+
+Symbol: TIM_DMABurstLength_18Bytes
+   Definitions
+      At line 171 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_18Bytes unused
+TIM_DMABurstLength_1Byte 00000000
+
+Symbol: TIM_DMABurstLength_1Byte
+   Definitions
+      At line 154 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_1Byte unused
+TIM_DMABurstLength_2Bytes 00000100
+
+Symbol: TIM_DMABurstLength_2Bytes
+   Definitions
+      At line 155 in file MSP432xx_tim_constants.s
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: TIM_DMABurstLength_2Bytes unused
+TIM_DMABurstLength_3Bytes 00000200
+
+Symbol: TIM_DMABurstLength_3Bytes
+   Definitions
+      At line 156 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_3Bytes unused
+TIM_DMABurstLength_4Bytes 00000300
+
+Symbol: TIM_DMABurstLength_4Bytes
+   Definitions
+      At line 157 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_4Bytes unused
+TIM_DMABurstLength_5Bytes 00000400
+
+Symbol: TIM_DMABurstLength_5Bytes
+   Definitions
+      At line 158 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_5Bytes unused
+TIM_DMABurstLength_6Bytes 00000500
+
+Symbol: TIM_DMABurstLength_6Bytes
+   Definitions
+      At line 159 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_6Bytes unused
+TIM_DMABurstLength_7Bytes 00000600
+
+Symbol: TIM_DMABurstLength_7Bytes
+   Definitions
+      At line 160 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_7Bytes unused
+TIM_DMABurstLength_8Bytes 00000700
+
+Symbol: TIM_DMABurstLength_8Bytes
+   Definitions
+      At line 161 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_8Bytes unused
+TIM_DMABurstLength_9Bytes 00000800
+
+Symbol: TIM_DMABurstLength_9Bytes
+   Definitions
+      At line 162 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMABurstLength_9Bytes unused
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Absolute symbols
+
+TIM_DMA_CC1 00000200
+
+Symbol: TIM_DMA_CC1
+   Definitions
+      At line 175 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_CC1 unused
+TIM_DMA_CC2 00000400
+
+Symbol: TIM_DMA_CC2
+   Definitions
+      At line 176 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_CC2 unused
+TIM_DMA_CC3 00000800
+
+Symbol: TIM_DMA_CC3
+   Definitions
+      At line 177 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_CC3 unused
+TIM_DMA_CC4 00001000
+
+Symbol: TIM_DMA_CC4
+   Definitions
+      At line 178 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_CC4 unused
+TIM_DMA_Trigger 00004000
+
+Symbol: TIM_DMA_Trigger
+   Definitions
+      At line 179 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_Trigger unused
+TIM_DMA_Update 00000100
+
+Symbol: TIM_DMA_Update
+   Definitions
+      At line 174 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_DMA_Update unused
+TIM_EncoderMode_TI1 00000001
+
+Symbol: TIM_EncoderMode_TI1
+   Definitions
+      At line 216 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EncoderMode_TI1 unused
+TIM_EncoderMode_TI12 00000003
+
+Symbol: TIM_EncoderMode_TI12
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 218 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EncoderMode_TI12 unused
+TIM_EncoderMode_TI2 00000002
+
+Symbol: TIM_EncoderMode_TI2
+   Definitions
+      At line 217 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EncoderMode_TI2 unused
+TIM_EventSource_CC1 00000002
+
+Symbol: TIM_EventSource_CC1
+   Definitions
+      At line 222 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EventSource_CC1 unused
+TIM_EventSource_CC2 00000004
+
+Symbol: TIM_EventSource_CC2
+   Definitions
+      At line 223 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EventSource_CC2 unused
+TIM_EventSource_CC3 00000008
+
+Symbol: TIM_EventSource_CC3
+   Definitions
+      At line 224 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EventSource_CC3 unused
+TIM_EventSource_CC4 00000010
+
+Symbol: TIM_EventSource_CC4
+   Definitions
+      At line 225 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EventSource_CC4 unused
+TIM_EventSource_Trigger 00000040
+
+Symbol: TIM_EventSource_Trigger
+   Definitions
+      At line 226 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_EventSource_Trigger unused
+TIM_EventSource_Update 00000001
+
+Symbol: TIM_EventSource_Update
+   Definitions
+      At line 221 in file MSP432xx_tim_constants.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: TIM_EventSource_Update unused
+TIM_ExtTRGPSC_DIV2 00001000
+
+Symbol: TIM_ExtTRGPSC_DIV2
+   Definitions
+      At line 183 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPSC_DIV2 unused
+TIM_ExtTRGPSC_DIV4 00002000
+
+Symbol: TIM_ExtTRGPSC_DIV4
+   Definitions
+      At line 184 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPSC_DIV4 unused
+TIM_ExtTRGPSC_DIV8 00003000
+
+Symbol: TIM_ExtTRGPSC_DIV8
+   Definitions
+      At line 185 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPSC_DIV8 unused
+TIM_ExtTRGPSC_OFF 00000000
+
+Symbol: TIM_ExtTRGPSC_OFF
+   Definitions
+      At line 182 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPSC_OFF unused
+TIM_ExtTRGPolarity_Inverted 00008000
+
+Symbol: TIM_ExtTRGPolarity_Inverted
+   Definitions
+      At line 204 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPolarity_Inverted unused
+TIM_ExtTRGPolarity_NonInverted 00000000
+
+Symbol: TIM_ExtTRGPolarity_NonInverted
+   Definitions
+      At line 205 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ExtTRGPolarity_NonInverted unused
+TIM_FLAG_CC1 00000002
+
+Symbol: TIM_FLAG_CC1
+   Definitions
+      At line 268 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC1 unused
+TIM_FLAG_CC1OF 00000200
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: TIM_FLAG_CC1OF
+   Definitions
+      At line 273 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC1OF unused
+TIM_FLAG_CC2 00000004
+
+Symbol: TIM_FLAG_CC2
+   Definitions
+      At line 269 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC2 unused
+TIM_FLAG_CC2OF 00000400
+
+Symbol: TIM_FLAG_CC2OF
+   Definitions
+      At line 274 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC2OF unused
+TIM_FLAG_CC3 00000008
+
+Symbol: TIM_FLAG_CC3
+   Definitions
+      At line 270 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC3 unused
+TIM_FLAG_CC3OF 00000800
+
+Symbol: TIM_FLAG_CC3OF
+   Definitions
+      At line 275 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC3OF unused
+TIM_FLAG_CC4 00000010
+
+Symbol: TIM_FLAG_CC4
+   Definitions
+      At line 271 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC4 unused
+TIM_FLAG_CC4OF 00001000
+
+Symbol: TIM_FLAG_CC4OF
+   Definitions
+      At line 276 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_CC4OF unused
+TIM_FLAG_Trigger 00000040
+
+Symbol: TIM_FLAG_Trigger
+   Definitions
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 272 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_Trigger unused
+TIM_FLAG_Update 00000001
+
+Symbol: TIM_FLAG_Update
+   Definitions
+      At line 267 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_FLAG_Update unused
+TIM_ForcedAction_Active 00000050
+
+Symbol: TIM_ForcedAction_Active
+   Definitions
+      At line 212 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ForcedAction_Active unused
+TIM_ForcedAction_InActive 00000040
+
+Symbol: TIM_ForcedAction_InActive
+   Definitions
+      At line 213 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ForcedAction_InActive unused
+TIM_ICPSC_DIV1 00000000
+
+Symbol: TIM_ICPSC_DIV1
+   Definitions
+      At line 119 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPSC_DIV1 unused
+TIM_ICPSC_DIV2 00000004
+
+Symbol: TIM_ICPSC_DIV2
+   Definitions
+      At line 120 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPSC_DIV2 unused
+TIM_ICPSC_DIV4 00000008
+
+Symbol: TIM_ICPSC_DIV4
+   Definitions
+      At line 121 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPSC_DIV4 unused
+TIM_ICPSC_DIV8 0000000C
+
+Symbol: TIM_ICPSC_DIV8
+   Definitions
+      At line 122 in file MSP432xx_tim_constants.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: TIM_ICPSC_DIV8 unused
+TIM_ICPolarity_BothEdge 0000000A
+
+Symbol: TIM_ICPolarity_BothEdge
+   Definitions
+      At line 108 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPolarity_BothEdge unused
+TIM_ICPolarity_Falling 00000002
+
+Symbol: TIM_ICPolarity_Falling
+   Definitions
+      At line 107 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPolarity_Falling unused
+TIM_ICPolarity_Rising 00000000
+
+Symbol: TIM_ICPolarity_Rising
+   Definitions
+      At line 106 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICPolarity_Rising unused
+TIM_ICSelection_DirectTI 00000001
+
+Symbol: TIM_ICSelection_DirectTI
+   Definitions
+      At line 112 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICSelection_DirectTI unused
+TIM_ICSelection_IndirectTI 00000002
+
+Symbol: TIM_ICSelection_IndirectTI
+   Definitions
+      At line 114 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICSelection_IndirectTI unused
+TIM_ICSelection_TRC 00000003
+
+Symbol: TIM_ICSelection_TRC
+   Definitions
+      At line 116 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_ICSelection_TRC unused
+TIM_IC_Channel 00000000
+
+Symbol: TIM_IC_Channel
+   Definitions
+      At line 48 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IC_Channel unused
+TIM_IC_ICFilte 00000008
+
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: TIM_IC_ICFilte
+   Definitions
+      At line 56 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IC_ICFilte unused
+TIM_IC_ICPolarity 00000002
+
+Symbol: TIM_IC_ICPolarity
+   Definitions
+      At line 50 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IC_ICPolarity unused
+TIM_IC_ICPrescaler 00000006
+
+Symbol: TIM_IC_ICPrescaler
+   Definitions
+      At line 54 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IC_ICPrescaler unused
+TIM_IC_ICSelection 00000004
+
+Symbol: TIM_IC_ICSelection
+   Definitions
+      At line 52 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IC_ICSelection unused
+TIM_IT_CC1 00000002
+
+Symbol: TIM_IT_CC1
+   Definitions
+      At line 127 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IT_CC1 unused
+TIM_IT_CC2 00000004
+
+Symbol: TIM_IT_CC2
+   Definitions
+      At line 128 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IT_CC2 unused
+TIM_IT_CC3 00000008
+
+Symbol: TIM_IT_CC3
+   Definitions
+      At line 129 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IT_CC3 unused
+TIM_IT_CC4 00000010
+
+Symbol: TIM_IT_CC4
+   Definitions
+      At line 130 in file MSP432xx_tim_constants.s
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: TIM_IT_CC4 unused
+TIM_IT_Trigger 00000040
+
+Symbol: TIM_IT_Trigger
+   Definitions
+      At line 131 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IT_Trigger unused
+TIM_IT_Update 00000001
+
+Symbol: TIM_IT_Update
+   Definitions
+      At line 126 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_IT_Update unused
+TIM_MasterSlaveMode_Disable 00000000
+
+Symbol: TIM_MasterSlaveMode_Disable
+   Definitions
+      At line 264 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_MasterSlaveMode_Disable unused
+TIM_MasterSlaveMode_Enable 00000080
+
+Symbol: TIM_MasterSlaveMode_Enable
+   Definitions
+      At line 263 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_MasterSlaveMode_Enable unused
+TIM_OCClear_Disable 00000000
+
+Symbol: TIM_OCClear_Disable
+   Definitions
+      At line 244 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCClear_Disable unused
+TIM_OCClear_Enable 00000080
+
+Symbol: TIM_OCClear_Enable
+   Definitions
+      At line 243 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCClear_Enable unused
+TIM_OCFast_Disable 00000000
+
+Symbol: TIM_OCFast_Disable
+   Definitions
+      At line 240 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCFast_Disable unused
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Absolute symbols
+
+TIM_OCFast_Enable 00000004
+
+Symbol: TIM_OCFast_Enable
+   Definitions
+      At line 239 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCFast_Enable unused
+TIM_OCMode_Active 00000010
+
+Symbol: TIM_OCMode_Active
+   Definitions
+      At line 61 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_Active unused
+TIM_OCMode_Inactive 00000020
+
+Symbol: TIM_OCMode_Inactive
+   Definitions
+      At line 62 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_Inactive unused
+TIM_OCMode_PWM1 00000060
+
+Symbol: TIM_OCMode_PWM1
+   Definitions
+      At line 64 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_PWM1 unused
+TIM_OCMode_PWM2 00000070
+
+Symbol: TIM_OCMode_PWM2
+   Definitions
+      At line 65 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_PWM2 unused
+TIM_OCMode_Timing 00000000
+
+Symbol: TIM_OCMode_Timing
+   Definitions
+      At line 60 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_Timing unused
+TIM_OCMode_Toggle 00000030
+
+Symbol: TIM_OCMode_Toggle
+   Definitions
+      At line 63 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCMode_Toggle unused
+TIM_OCPolarity_High 00000000
+
+Symbol: TIM_OCPolarity_High
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 94 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCPolarity_High unused
+TIM_OCPolarity_Low 00000002
+
+Symbol: TIM_OCPolarity_Low
+   Definitions
+      At line 95 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCPolarity_Low unused
+TIM_OCPreload_Disable 00000000
+
+Symbol: TIM_OCPreload_Disable
+   Definitions
+      At line 236 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCPreload_Disable unused
+TIM_OCPreload_Enable 00000008
+
+Symbol: TIM_OCPreload_Enable
+   Definitions
+      At line 235 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCPreload_Enable unused
+TIM_OCReferenceClear_ETRF 00000008
+
+Symbol: TIM_OCReferenceClear_ETRF
+   Definitions
+      At line 280 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCReferenceClear_ETRF unused
+TIM_OCReferenceClear_OCREFCLR 00000000
+
+Symbol: TIM_OCReferenceClear_OCREFCLR
+   Definitions
+      At line 281 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OCReferenceClear_OCREFCLR unused
+TIM_OC_OCMode 00000000
+
+Symbol: TIM_OC_OCMode
+   Definitions
+      At line 37 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OC_OCMode unused
+TIM_OC_OCPolarity 00000006
+
+Symbol: TIM_OC_OCPolarity
+   Definitions
+      At line 43 in file MSP432xx_tim_constants.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: TIM_OC_OCPolarity unused
+TIM_OC_OutputState 00000002
+
+Symbol: TIM_OC_OutputState
+   Definitions
+      At line 39 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OC_OutputState unused
+TIM_OC_Pulse 00000004
+
+Symbol: TIM_OC_Pulse
+   Definitions
+      At line 41 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OC_Pulse unused
+TIM_OPMode_Repetitive 00000000
+
+Symbol: TIM_OPMode_Repetitive
+   Definitions
+      At line 70 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OPMode_Repetitive unused
+TIM_OPMode_Single 00000008
+
+Symbol: TIM_OPMode_Single
+   Definitions
+      At line 69 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OPMode_Single unused
+TIM_OutputState_Disable 00000000
+
+Symbol: TIM_OutputState_Disable
+   Definitions
+      At line 98 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OutputState_Disable unused
+TIM_OutputState_Enable 00000001
+
+Symbol: TIM_OutputState_Enable
+   Definitions
+      At line 99 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_OutputState_Enable unused
+TIM_PSCReloadMode_Immediate 00000001
+
+Symbol: TIM_PSCReloadMode_Immediate
+   Definitions
+      At line 209 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_PSCReloadMode_Immediate unused
+TIM_PSCReloadMode_Update 00000000
+
+
+
+ARM Macro Assembler    Page 20 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: TIM_PSCReloadMode_Update
+   Definitions
+      At line 208 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_PSCReloadMode_Update unused
+TIM_SlaveMode_External1 00000007
+
+Symbol: TIM_SlaveMode_External1
+   Definitions
+      At line 260 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_SlaveMode_External1 unused
+TIM_SlaveMode_Gated 00000005
+
+Symbol: TIM_SlaveMode_Gated
+   Definitions
+      At line 258 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_SlaveMode_Gated unused
+TIM_SlaveMode_Reset 00000004
+
+Symbol: TIM_SlaveMode_Reset
+   Definitions
+      At line 257 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_SlaveMode_Reset unused
+TIM_SlaveMode_Trigger 00000006
+
+Symbol: TIM_SlaveMode_Trigger
+   Definitions
+      At line 259 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_SlaveMode_Trigger unused
+TIM_TIxExternalCLK1Source_TI1 00000050
+
+Symbol: TIM_TIxExternalCLK1Source_TI1
+   Definitions
+      At line 198 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TIxExternalCLK1Source_TI1 unused
+TIM_TIxExternalCLK1Source_TI1ED 00000040
+
+Symbol: TIM_TIxExternalCLK1Source_TI1ED
+   Definitions
+      At line 200 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TIxExternalCLK1Source_TI1ED unused
+TIM_TIxExternalCLK1Source_TI2 00000060
+
+Symbol: TIM_TIxExternalCLK1Source_TI2
+   Definitions
+
+
+
+ARM Macro Assembler    Page 21 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 199 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TIxExternalCLK1Source_TI2 unused
+TIM_TRGOSource_Enable 00000010
+
+Symbol: TIM_TRGOSource_Enable
+   Definitions
+      At line 248 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_Enable unused
+TIM_TRGOSource_OC1 00000030
+
+Symbol: TIM_TRGOSource_OC1
+   Definitions
+      At line 250 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_OC1 unused
+TIM_TRGOSource_OC1Ref 00000040
+
+Symbol: TIM_TRGOSource_OC1Ref
+   Definitions
+      At line 251 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_OC1Ref unused
+TIM_TRGOSource_OC2Ref 00000050
+
+Symbol: TIM_TRGOSource_OC2Ref
+   Definitions
+      At line 252 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_OC2Ref unused
+TIM_TRGOSource_OC3Ref 00000060
+
+Symbol: TIM_TRGOSource_OC3Ref
+   Definitions
+      At line 253 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_OC3Ref unused
+TIM_TRGOSource_OC4Ref 00000070
+
+Symbol: TIM_TRGOSource_OC4Ref
+   Definitions
+      At line 254 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_OC4Ref unused
+TIM_TRGOSource_Reset 00000000
+
+Symbol: TIM_TRGOSource_Reset
+   Definitions
+      At line 247 in file MSP432xx_tim_constants.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 22 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: TIM_TRGOSource_Reset unused
+TIM_TRGOSource_Update 00000020
+
+Symbol: TIM_TRGOSource_Update
+   Definitions
+      At line 249 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TRGOSource_Update unused
+TIM_TS_ETRF 00000070
+
+Symbol: TIM_TS_ETRF
+   Definitions
+      At line 195 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_ETRF unused
+TIM_TS_ITR0 00000000
+
+Symbol: TIM_TS_ITR0
+   Definitions
+      At line 188 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_ITR0 unused
+TIM_TS_ITR1 00000010
+
+Symbol: TIM_TS_ITR1
+   Definitions
+      At line 189 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_ITR1 unused
+TIM_TS_ITR2 00000020
+
+Symbol: TIM_TS_ITR2
+   Definitions
+      At line 190 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_ITR2 unused
+TIM_TS_ITR3 00000030
+
+Symbol: TIM_TS_ITR3
+   Definitions
+      At line 191 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_ITR3 unused
+TIM_TS_TI1FP1 00000050
+
+Symbol: TIM_TS_TI1FP1
+   Definitions
+      At line 193 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_TI1FP1 unused
+TIM_TS_TI1F_ED 00000040
+
+
+
+
+ARM Macro Assembler    Page 23 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: TIM_TS_TI1F_ED
+   Definitions
+      At line 192 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_TI1F_ED unused
+TIM_TS_TI2FP2 00000060
+
+Symbol: TIM_TS_TI2FP2
+   Definitions
+      At line 194 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TS_TI2FP2 unused
+TIM_TimeBase_ClockDivision 00000006
+
+Symbol: TIM_TimeBase_ClockDivision
+   Definitions
+      At line 32 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TimeBase_ClockDivision unused
+TIM_TimeBase_CounterMode 00000002
+
+Symbol: TIM_TimeBase_CounterMode
+   Definitions
+      At line 27 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TimeBase_CounterMode unused
+TIM_TimeBase_Period 00000004
+
+Symbol: TIM_TimeBase_Period
+   Definitions
+      At line 29 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TimeBase_Period unused
+TIM_TimeBase_Prescaler 00000000
+
+Symbol: TIM_TimeBase_Prescaler
+   Definitions
+      At line 25 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_TimeBase_Prescaler unused
+TIM_UpdateSource_Global 00000000
+
+Symbol: TIM_UpdateSource_Global
+   Definitions
+      At line 229 in file MSP432xx_tim_constants.s
+   Uses
+      None
+Comment: TIM_UpdateSource_Global unused
+TIM_UpdateSource_Regular 00000001
+
+Symbol: TIM_UpdateSource_Regular
+   Definitions
+      At line 232 in file MSP432xx_tim_constants.s
+
+
+
+ARM Macro Assembler    Page 24 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: TIM_UpdateSource_Regular unused
+170 symbols
+505 symbols in table
