@@ -1,0 +1,9 @@
+--cpu=Cortex-M4.fp.sp
+".\objects\msp432xx_constants.o"
+".\objects\msp432xx_tim_constants.o"
+".\objects\core_cm3_constant.o"
+".\objects\startup_msp432xx_md.o"
+".\objects\q4.o"
+--ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\LAB1 Assignment.map" -o ".\Objects\LAB1 Assignment.axf"

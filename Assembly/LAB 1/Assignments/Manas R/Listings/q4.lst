@@ -1,0 +1,68 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;INCLUDE MSP432xx_constants.s          
+    2 00000000         ;INCLUDE MSP432xx_tim_constants.s   
+    3 00000000                 AREA             main, CODE, READONLY
+    4 00000000                 EXPORT           __main
+    5 00000000                 ENTRY
+    6 00000000         
+    7 00000000         __main  PROC
+    8 00000000         
+    9 00000000 F04F 0012       MOV              R0,#18
+   10 00000004 F04F 0114       MOV              R1,#20
+   11 00000008 EB01 0200       ADD              R2,R1,R0    ;Total amount spent
+                                                            
+   12 0000000C F04F 0364       MOV              R3,#100
+   13 00000010         
+   14 00000010 EBC3 0402       RSB              R4, R3, R2
+   15 00000014 F1C4 0500       RSB              R5, R4,#0
+   16 00000018         
+   17 00000018         
+   18 00000018         
+   19 00000018 E7FE    __stop  B                __stop
+   20 0000001A         
+   21 0000001A                 ENDP
+                       
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\q4.d -o.\objects\q4.o -I.\RTE\_Target_1 -IC:\Users
+\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Ad
+min\AppData\Local\Arm\Packs\TexasInstruments\MSP432P4xx_DFP\3.2.6\Device\Includ
+e --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 531" --predef
+ine="_RTE_ SETA 1" --predefine="_RTE_ SETA 1" --predefine="__MSP432P401R__ SETA
+ 1" --list=.\listings\q4.lst q4.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 7 in file q4.s
+   Uses
+      At line 4 in file q4.s
+Comment: __main used once
+__stop 00000018
+
+Symbol: __stop
+   Definitions
+      At line 19 in file q4.s
+   Uses
+      At line 19 in file q4.s
+Comment: __stop used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 3 in file q4.s
+   Uses
+      None
+Comment: main unused
+3 symbols
+338 symbols in table
