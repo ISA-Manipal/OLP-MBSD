@@ -6,16 +6,10 @@
 				
 __main			PROC
 	
-				MOV R0, #08
-				MOV R8, #0x0
-				MOV R1, #0x01
-				
-__loop 			
-                AND R2, R0, R1
-			    CMP R0, R8
-				BEQ here
-
-here			MOV R2 , R0
+				MOV R1, #4
+				TST R1, 0x0
+				MOVNE R5, R1 
+			        MOVEQ R6, R1
 
 
 				ENDP
