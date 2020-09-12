@@ -4,7 +4,7 @@
 
 **Q1.** WAP to find the 1's complement of a given number x.
 
-**Q2.** WAP to invert bits 0-2 of x.
+**Q2.** WAP to calculate the number of times a particular letter occurs in a given string.
 
 **Q3.** WAP to connect four sensors in two sub systems. Create a logic for the system with given condition.
         The First system holds one sensor interfaced with R0 register.
