@@ -2,7 +2,7 @@
 
 *(Mention all the theoretical answers in your README)*
 
-**Q1.** WAP to findthe 1's complement of a given number x.
+**Q1.** WAP to find the 1's complement of a given number x.
 
 **Q2.** WAP to invert bits 0-2 of x.
 
