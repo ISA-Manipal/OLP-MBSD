@@ -1,0 +1,26 @@
+		INCLUDE MSP432xx_constants.s
+		INCLUDE MSP432xx_tim_constants.s
+		AREA main,CODE,READONLY	
+		EXPORT __main
+		ENTRY
+__main	PROC
+		MOV R0,#0xFFFFDFFF
+		MOV R1,#0x00002000
+		MOV R9,#0x20000000
+		LDR R8,=0x20005000
+		MOV R2,#0x00
+__loop  CMP R0,R2
+		BMI NEGA
+		BPL POSI
+Z		ADD R0,#1
+		CMP R0,R1
+		BNE __loop
+NEGA	STR R0,[R9,#4]!
+		B Z
+POSI	STR R0,[R8,#4]!
+		B Z
+		ENDP
+		ALIGN
+			
+		AREA allocations, DATA, READWRITE
+		END
