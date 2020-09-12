@@ -1,5 +1,4 @@
-  
-				INCLUDE MSP432xx_constants.s	; Load Constant Definitions
+	                        INCLUDE MSP432xx_constants.s	; Load Constant Definitions
 				INCLUDE MSP432xx_tim_constants.s   ; TIM Constants
 				AREA    main, CODE, READONLY
 				EXPORT	__main		; make __main visible to linker
@@ -7,20 +6,17 @@
 				
 __main			PROC
 	
-				LDR	R0, = 0x20000002
-				LDR R1, = 0x20000001
+				MOV R0, #08
+				MOV R8, #0x0
+				MOV R1, #0x01
 				
-				LSRS R1,#1
-				
-				BCC __even
-				LDR R3, = 0x20000001
-				
+__loop 			
+                AND R2, R0, R1
+			    CMP R0, R8
+				BEQ here
 
-here			B here	
+here			MOV R2 , R0
 
-
-__even
-				LDR R4, = 0x20000002
 
 				ENDP
 					
