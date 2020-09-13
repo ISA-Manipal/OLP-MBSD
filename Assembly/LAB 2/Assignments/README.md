@@ -1,4 +1,4 @@
-# LAB-1 Assignments
+# LAB-2 Assignments
 
 *(Mention all the theoretical answers in your README)*
 
