@@ -1,0 +1,13 @@
+        AREA main, CODE, READONLY 
+        EXPORT __main 
+__main  PROC
+        				
+        MOV R2, #2
+        NEG R3,R2  ;Negates the value of R2
+        
+		
+__stop  B __stop
+
+ 
+        ENDP
+        END
