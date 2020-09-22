@@ -1,0 +1,72 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             main,CODE,READONLY
+    2 00000000                 EXPORT           __main
+    3 00000000                 ENTRY
+    4 00000000         __main  PROC
+    5 00000000         
+    6 00000000 F04F 0700       MOV              R7,#0x0
+    7 00000004 F04F 0001       MOV              R0,#0x1
+    8 00000008 F04F 0301       MOV              R3,#0x1
+    9 0000000C F04F 0400       MOV              R4,#0x0
+   10 00000010 F04F 0501       MOV              R5,#0x1
+   11 00000014 EA04 0405       AND              R4,R5
+   12 00000018 EA03 0304       AND              R3,R4
+   13 0000001C EA00 0003       AND              R0,R3
+   14 00000020 EA47 0700       ORR              R7,R0
+   15 00000024         
+   16 00000024                 ENDP
+   17 00000024         
+   18 00000024                 ALIGN
+   19 00000024                 AREA             allocations, DATA, READWRITE
+   20 00000000                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\q3.d -o.\objects\q3.o -I.\RTE\_Target_1 -IC:\Users
+\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Ad
+min\AppData\Local\Arm\Packs\TexasInstruments\MSP432P4xx_DFP\3.2.6\Device\Includ
+e --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 531" --predef
+ine="_RTE_ SETA 1" --predefine="_RTE_ SETA 1" --predefine="__MSP432P401R__ SETA
+ 1" --list=.\listings\q3.lst q3.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 4 in file q3.s
+   Uses
+      At line 2 in file q3.s
+Comment: __main used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 1 in file q3.s
+   Uses
+      None
+Comment: main unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+allocations 00000000
+
+Symbol: allocations
+   Definitions
+      At line 19 in file q3.s
+   Uses
+      None
+Comment: allocations unused
+1 symbol
+338 symbols in table

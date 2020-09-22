@@ -49,10 +49,10 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>LAB1 Assignment</OutputName>
+          <OutputName>A2</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>-1</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -384,19 +384,19 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
+              <FileName>core_cm3_constant.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\..\Header Files\core_cm3_constant.s</FilePath>
+            </File>
+            <File>
               <FileName>MSP432xx_constants.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\Keil-Projects\LAB1\MSP432xx_constants.s</FilePath>
+              <FilePath>..\..\..\Header Files\MSP432xx_constants.s</FilePath>
             </File>
             <File>
               <FileName>MSP432xx_tim_constants.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\Keil-Projects\LAB1\MSP432xx_tim_constants.s</FilePath>
-            </File>
-            <File>
-              <FileName>core_cm3_constant.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\Header Files\core_cm3_constant.s</FilePath>
+              <FilePath>..\..\..\Header Files\MSP432xx_tim_constants.s</FilePath>
             </File>
             <File>
               <FileName>startup_MSP432xx_md.s</FileName>
@@ -404,9 +404,9 @@
               <FilePath>..\..\..\Header Files\startup_MSP432xx_md.s</FilePath>
             </File>
             <File>
-              <FileName>q4.s</FileName>
+              <FileName>q3.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\q4.s</FilePath>
+              <FilePath>.\q3.s</FilePath>
             </File>
           </Files>
         </Group>

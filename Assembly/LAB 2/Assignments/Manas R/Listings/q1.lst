@@ -1,0 +1,66 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;INCLUDE MSP432xx_constants.s
+    2 00000000         ;INCLUDE MSP432xx_tim_constants.s
+    3 00000000                 AREA             main,CODE,READONLY
+    4 00000000                 EXPORT           __main
+    5 00000000                 ENTRY
+    6 00000000         __main  PROC
+    7 00000000 4901            LDR              R1, =0x01234ABC
+    8 00000002 EA6F 0201       MVN              R2, R1
+    9 00000006         
+   10 00000006                 ENDP
+   11 00000006         
+   12 00000006 00 00           ALIGN
+   13 00000008 01234ABC        AREA             allocations, DATA, READWRITE
+   14 00000000                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\q1.d -o.\objects\q1.o -I.\RTE\_Target_1 -IC:\Users
+\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Ad
+min\AppData\Local\Arm\Packs\TexasInstruments\MSP432P4xx_DFP\3.2.6\Device\Includ
+e --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 531" --predef
+ine="_RTE_ SETA 1" --predefine="_RTE_ SETA 1" --predefine="__MSP432P401R__ SETA
+ 1" --list=.\listings\q1.lst q1.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 6 in file q1.s
+   Uses
+      At line 4 in file q1.s
+Comment: __main used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 3 in file q1.s
+   Uses
+      None
+Comment: main unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+allocations 00000000
+
+Symbol: allocations
+   Definitions
+      At line 13 in file q1.s
+   Uses
+      None
+Comment: allocations unused
+1 symbol
+340 symbols in table
