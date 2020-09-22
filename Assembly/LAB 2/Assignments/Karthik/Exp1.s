@@ -1,4 +1,4 @@
-         AREA arm, CODE, READONLY
+           AREA arm, CODE, READONLY
 	     EXPORT __main
 	     ENTRY
 	
@@ -9,22 +9,22 @@ __main
 
 check    
 
-         LDRB R3, [R2], #1
-		 CMP R3, R5
-		 BEQ store
-		 B check
+           LDRB R3, [R2], #1
+	     CMP R3, R5
+	     BEQ store
+           B check
 		 
-store    STRB R6, [R1], #1
-         B check
+store      STRB R6, [R1], #1
+           B check
 
 
 	     ALIGN
 		
 	     AREA Mydata, DATA, READONLY
-src      DCB "BANANA", 0
+src          DCB "BANANA", 0
 	
 	     AREA Copy, DATA, READWRITE
-dst      SPACE 20	
+dst          SPACE 20	
 	
 		
 		
